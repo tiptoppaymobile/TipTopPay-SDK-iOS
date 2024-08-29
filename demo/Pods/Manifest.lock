@@ -1,0 +1,22 @@
+PODS:
+  - TipTopPay (1.0.3):
+    - TipTopPayNetworking
+  - TipTopPayNetworking (1.0.0)
+
+DEPENDENCIES:
+  - TipTopPay (from `../sdk`)
+  - TipTopPayNetworking (from `../networking`)
+
+EXTERNAL SOURCES:
+  TipTopPay:
+    :path: "../sdk"
+  TipTopPayNetworking:
+    :path: "../networking"
+
+SPEC CHECKSUMS:
+  TipTopPay: aab8af469cb8f095b18c0473f347bae1d62bd366
+  TipTopPayNetworking: 4cf1691550bf741920e8e81e32e194ea3dd9f6d2
+
+PODFILE CHECKSUM: 437a6ea53d0e6c1841401fe510dac8797be8e47b
+
+COCOAPODS: 1.13.0

@@ -1,0 +1,6 @@
+framework module TipTopPayNetworking {
+  umbrella header "TipTopPayNetworking-umbrella.h"
+
+  export *
+  module * { export * }
+}
