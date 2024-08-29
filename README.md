@@ -9,8 +9,8 @@ TipTopPay SDK позволяет интегрировать прием плат�
 Для подключения SDK мы рекомендуем использовать CocoaPods. Добавьте в файл Podfile зависимости:
 
 ```
-pod 'TipTopPay', :git =>  "https://gitlab.com/tiptoppay/mobile/tiptoppay-sdk-ios", :branch => "master"
-pod 'TipTopPayNetworking', :git =>  "https://gitlab.com/tiptoppay/mobile/tiptoppay-sdk-ios", :branch => "master"
+pod 'TipTopPay', :git =>  "https://github.com/tiptoppaymobile/TipTopPay-SDK-iOS", :branch => "master"
+pod 'TipTopPayNetworking', :git =>  "https://github.com/tiptoppaymobile/TipTopPay-SDK-iOS", :branch => "master"
 ```
 
 ### Структура проекта:

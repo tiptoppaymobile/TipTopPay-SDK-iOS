@@ -3,8 +3,8 @@ use_frameworks!
 
 target 'demo' do
 
-#  pod 'TipTopPay', :git =>  "https://gitlab.com/tiptoppay/mobile/tiptoppay-sdk-ios", :branch => "master"
-#  pod 'TipTopPayNetworking', :git =>  "https://gitlab.com/tiptoppay/mobile/tiptoppay-sdk-ios", :branch => "master"
+#  pod 'TipTopPay', :git =>  "https://github.com/tiptoppaymobile/TipTopPay-SDK-iOS", :branch => "master"
+#  pod 'TipTopPayNetworking', :git =>  "https://github.com/tiptoppaymobile/TipTopPay-SDK-iOS", :branch => "master"
 
   pod 'TipTopPay', :path => "../sdk"
   pod 'TipTopPayNetworking', :path => "../networking"
