@@ -1,6 +1,6 @@
 {
   "name": "TipTopPay",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "summary": "Core library that allows you to use internet acquiring from TipTopPay in your app",
   "description": "Core library that allows you to use internet acquiring from TipTopPay in your app!",
   "homepage": "https://tiptoppay.inc/",
@@ -13,12 +13,12 @@
   },
   "source": {
     "git": "https://gitlab.com/tiptoppay/mobile/tiptoppay-sdk-ios.git",
-    "tag": "1.0.3"
+    "tag": "1.0.4"
   },
   "source_files": "Sources/**/*.swift",
   "resource_bundles": {
     "TipTopPaySDK": [
-      "Resources/**/*.{txt,json,png,jpeg,jpg,storyboard,xib,xcassets}"
+      "Resources/**/*.{txt,json,png,jpeg,jpg,storyboard,xib,xcassets,strings}"
     ]
   },
   "requires_arc": true,

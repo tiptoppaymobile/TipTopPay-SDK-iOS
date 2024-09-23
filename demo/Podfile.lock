@@ -1,5 +1,5 @@
 PODS:
-  - TipTopPay (1.0.3):
+  - TipTopPay (1.0.4):
     - TipTopPayNetworking
   - TipTopPayNetworking (1.0.0)
 
@@ -14,9 +14,9 @@ EXTERNAL SOURCES:
     :path: "../networking"
 
 SPEC CHECKSUMS:
-  TipTopPay: aab8af469cb8f095b18c0473f347bae1d62bd366
+  TipTopPay: 783f9dc12bbb0ad31f3b8fc7fbae0a34cea08242
   TipTopPayNetworking: 4cf1691550bf741920e8e81e32e194ea3dd9f6d2
 
-PODFILE CHECKSUM: 437a6ea53d0e6c1841401fe510dac8797be8e47b
+PODFILE CHECKSUM: 738fced3e7ee055a37ec6d14dff1109e6d14732d
 
 COCOAPODS: 1.13.0

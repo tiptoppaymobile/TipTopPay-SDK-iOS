@@ -26,7 +26,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UhC-Yt-hmt">
-                                <rect key="frame" x="0.0" y="490" width="393" height="362"/>
+                                <rect key="frame" x="0.0" y="450" width="393" height="402"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="f2t-fS-Iyr" userLabel="Main Card Stack View">
                                         <rect key="frame" x="20" y="0.0" width="353" height="388"/>
@@ -37,8 +37,8 @@
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_home_indicator" translatesAutoresizingMaskIntoConstraints="NO" id="ano-D3-Ubo">
                                                         <rect key="frame" x="0.0" y="21" width="353" height="5"/>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Оплата картой" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ySl-co-gaI">
-                                                        <rect key="frame" x="0.0" y="49" width="333" height="26.333333333333329"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ySl-co-gaI">
+                                                        <rect key="frame" x="0.0" y="49" width="333" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                                         <color key="textColor" name="color_text_main"/>
                                                         <nil key="highlightedColor"/>
@@ -158,8 +158,8 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </textField>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ММ / ГГ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xhH-gq-zIP">
-                                                                <rect key="frame" x="16" y="10.333333333333371" width="154" height="15.666666666666664"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xhH-gq-zIP">
+                                                                <rect key="frame" x="16" y="26" width="154" height="0.0"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="154" id="7P4-10-8Sm"/>
                                                                 </constraints>
@@ -215,8 +215,8 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </textField>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IbH-jp-j4A">
-                                                                <rect key="frame" x="16" y="10.333333333333371" width="111" height="15.666666666666664"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IbH-jp-j4A">
+                                                                <rect key="frame" x="16" y="26" width="111" height="0.0"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="111" id="DiZ-ur-Fky"/>
                                                                 </constraints>
@@ -268,17 +268,47 @@
                                                     </view>
                                                 </subviews>
                                             </stackView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ej6-Eu-2fF">
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c9R-QT-6Za" userLabel="3ds View">
+                                                <rect key="frame" x="0.0" y="244" width="353" height="70"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tba-Xc-BhP">
+                                                        <rect key="frame" x="0.0" y="0.0" width="321" height="70"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHM-Jl-dxK">
+                                                        <rect key="frame" x="329" y="4" width="24" height="22"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="24" id="hCF-eP-BTE"/>
+                                                        </constraints>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="icn_attention"/>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="Tba-Xc-BhP" secondAttribute="bottom" id="GDr-DJ-3XY"/>
+                                                    <constraint firstItem="WHM-Jl-dxK" firstAttribute="leading" secondItem="Tba-Xc-BhP" secondAttribute="trailing" constant="8" symbolic="YES" id="M0f-RT-oOg"/>
+                                                    <constraint firstItem="Tba-Xc-BhP" firstAttribute="top" secondItem="c9R-QT-6Za" secondAttribute="top" id="Vhy-H2-EQg"/>
+                                                    <constraint firstItem="Tba-Xc-BhP" firstAttribute="leading" secondItem="c9R-QT-6Za" secondAttribute="leading" id="ZII-oQ-RhM"/>
+                                                    <constraint firstAttribute="height" constant="70" id="oTU-Q4-Vda"/>
+                                                    <constraint firstItem="WHM-Jl-dxK" firstAttribute="top" secondItem="c9R-QT-6Za" secondAttribute="top" constant="4" id="oVT-W5-FZO"/>
+                                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="WHM-Jl-dxK" secondAttribute="bottom" id="sMS-jv-etk"/>
+                                                    <constraint firstAttribute="trailing" secondItem="WHM-Jl-dxK" secondAttribute="trailing" id="yMd-7w-sy3"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ej6-Eu-2fF" userLabel="Button View">
                                                 <rect key="frame" x="0.0" y="252" width="353" height="72"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJC-RS-URc" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="16" width="353" height="56"/>
                                                         <color key="backgroundColor" name="color_blue"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="56" id="718-Nw-dUx"/>
+                                                            <constraint firstAttribute="height" constant="56" id="Xrm-jm-x0T"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <state key="normal" title="Оплатить">
+                                                        <state key="normal">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </state>
                                                         <userDefinedRuntimeAttributes>
@@ -325,23 +355,30 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="f2t-fS-Iyr" secondAttribute="bottom" constant="14" id="4KB-kg-qCE"/>
                                     <constraint firstAttribute="trailing" secondItem="f2t-fS-Iyr" secondAttribute="trailing" constant="20" id="QjS-aU-1Vs"/>
                                     <constraint firstItem="f2t-fS-Iyr" firstAttribute="top" secondItem="UhC-Yt-hmt" secondAttribute="top" id="Ryg-x2-Imu"/>
                                     <constraint firstItem="f2t-fS-Iyr" firstAttribute="leading" secondItem="UhC-Yt-hmt" secondAttribute="leading" constant="20" id="nxO-FR-sx5"/>
-                                    <constraint firstAttribute="height" constant="362" id="qfz-f0-asl"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="CVL-Ey-4MH"/>
                         <constraints>
                             <constraint firstItem="CVL-Ey-4MH" firstAttribute="trailing" secondItem="UhC-Yt-hmt" secondAttribute="trailing" id="8Fa-dJ-QUM"/>
+                            <constraint firstItem="UhC-Yt-hmt" firstAttribute="top" secondItem="bBd-gv-a5O" secondAttribute="bottom" priority="900" constant="-400" id="ATA-FF-LEC"/>
                             <constraint firstItem="CVL-Ey-4MH" firstAttribute="bottom" secondItem="ZvC-aj-6EK" secondAttribute="bottom" id="Iu1-d3-ym0"/>
+                            <constraint firstItem="UhC-Yt-hmt" firstAttribute="top" secondItem="bBd-gv-a5O" secondAttribute="bottom" id="JvU-97-d4v"/>
                             <constraint firstItem="ZvC-aj-6EK" firstAttribute="top" secondItem="CVL-Ey-4MH" secondAttribute="top" id="L2G-Tk-f9p"/>
                             <constraint firstItem="CVL-Ey-4MH" firstAttribute="trailing" secondItem="ZvC-aj-6EK" secondAttribute="trailing" id="aG5-bU-ypq"/>
                             <constraint firstItem="ZvC-aj-6EK" firstAttribute="leading" secondItem="CVL-Ey-4MH" secondAttribute="leading" id="e9F-1k-yUA"/>
                             <constraint firstItem="UhC-Yt-hmt" firstAttribute="leading" secondItem="CVL-Ey-4MH" secondAttribute="leading" id="nIF-Gi-AXq"/>
                             <constraint firstAttribute="bottom" secondItem="UhC-Yt-hmt" secondAttribute="bottom" id="p8u-13-qBq"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="JvU-97-d4v"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="cardCvvTextField" destination="H7z-3W-BC2" id="Yvg-1v-aeD"/>
@@ -351,9 +388,8 @@
                         <outlet property="cardPlaceholder" destination="KA9-vx-nN5" id="MUm-iE-X1i"/>
                         <outlet property="cardTypeIcon" destination="tgF-UC-OG9" id="tLM-Bc-AF8"/>
                         <outlet property="cardView" destination="h4y-G1-6qY" id="hkI-kw-AJy"/>
-                        <outlet property="containerBottomConstraint" destination="p8u-13-qBq" id="dgn-kG-NlP"/>
                         <outlet property="containerCardBottomConstraint" destination="p8u-13-qBq" id="xsO-m6-qDG"/>
-                        <outlet property="containerHeightConstraint" destination="qfz-f0-asl" id="ciy-zg-KXS"/>
+                        <outlet property="containerHeightConstraint" destination="ATA-FF-LEC" id="ts7-gu-UhM"/>
                         <outlet property="containerView" destination="UhC-Yt-hmt" id="0YA-A6-U1O"/>
                         <outlet property="cvvPlaceholder" destination="IbH-jp-j4A" id="PPT-Cx-4kP"/>
                         <outlet property="cvvView" destination="17Q-q2-SrP" id="HJ2-cC-82w"/>
@@ -361,11 +397,15 @@
                         <outlet property="expDateView" destination="8z6-s9-M8m" id="IuP-cA-eHp"/>
                         <outlet property="eyeOpenButton" destination="6GZ-VT-s12" id="NOT-jj-VyL"/>
                         <outlet property="iconCvvCard" destination="7b0-GR-4mG" id="F79-83-W36"/>
+                        <outlet property="infoButton" destination="WHM-Jl-dxK" id="SyU-bW-MMs"/>
+                        <outlet property="isActiveTopConstraint" destination="JvU-97-d4v" id="tMq-LC-Xm7"/>
                         <outlet property="mainCardStackView" destination="f2t-fS-Iyr" id="uVu-IQ-lug"/>
                         <outlet property="payButton" destination="oJC-RS-URc" id="C7O-pD-Kez"/>
+                        <outlet property="paymentAttentionLabel" destination="Tba-Xc-BhP" id="vas-R4-dyn"/>
                         <outlet property="paymentCardLabel" destination="ySl-co-gaI" id="2iZ-PX-jiu"/>
                         <outlet property="scanButton" destination="a6Q-D2-tlt" id="XZ4-3W-vT8"/>
                         <outlet property="stackInpitMainStackView" destination="tfx-fU-6Mk" id="gbE-PW-ogb"/>
+                        <outlet property="threeDsView" destination="c9R-QT-6Za" id="Phk-mW-xsm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ddg-dy-BI5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -408,7 +448,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y8Q-vb-h03" userLabel="Progress View">
                                                 <rect key="frame" x="0.0" y="252.33333333333334" width="313" height="66.333333333333343"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Оплата в процессе" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vao-cc-YkU">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vao-cc-YkU">
                                                         <rect key="frame" x="20" y="0.0" width="273" height="66.333333333333329"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                                         <color key="textColor" name="color_text_main"/>
@@ -477,7 +517,7 @@
                                                         </constraints>
                                                         <color key="tintColor" name="color_blue"/>
                                                         <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="plain" title="Выбрать способ оплаты"/>
+                                                        <buttonConfiguration key="configuration" style="plain"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                                 <real key="value" value="8"/>
@@ -660,7 +700,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="19P-7f-473" userLabel="labelView">
                                         <rect key="frame" x="16" y="34" width="361" height="58"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Выберите способ оплаты" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Gs-ry-pVK">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Gs-ry-pVK">
                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="58"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                                 <color key="textColor" name="color_text_main"/>
@@ -695,7 +735,7 @@
                                                                             <constraint firstAttribute="height" constant="56" id="4Nf-Ry-ltI"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                        <state key="normal" title="Банковская карта">
+                                                                        <state key="normal">
                                                                             <color key="titleColor" name="color_text_white"/>
                                                                         </state>
                                                                         <userDefinedRuntimeAttributes>
@@ -836,6 +876,7 @@
         <image name="ic_progress" width="180" height="180"/>
         <image name="ic_scan" width="13.333333015441895" height="13.333333015441895"/>
         <image name="ic_secured_by_ttp" width="136" height="20"/>
+        <image name="icn_attention" width="20" height="20"/>
         <image name="icn_cvv" width="30" height="22"/>
         <image name="icn_eye_closed" width="14" height="13"/>
         <namedColor name="card_color_border">

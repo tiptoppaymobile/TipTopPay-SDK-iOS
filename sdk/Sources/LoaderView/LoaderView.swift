@@ -58,7 +58,7 @@ final class LoaderView: UIView {
     
     func startAnimated(_ text: String? = nil) {
         isHidden = false
-        self.text = text ?? LoaderType.loaderText.toString()
+        self.text = text ?? "ttp_update_loader".localized
         isAnimated = true
         updateView()
     }

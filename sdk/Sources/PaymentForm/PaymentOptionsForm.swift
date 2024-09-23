@@ -88,6 +88,9 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
        
         isOnActionPay(configuration: configuration)
         paymentLabel.textColor = .mainText
+        
+        paymentLabel.text = "ttpsdk_text_options_title".localized
+        payWithCardButton.setTitle("ttpsdk_text_options_card".localized, for: .normal)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -119,12 +122,15 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     
     private func isOnActionPay(configuration: TipTopPayConfiguration) {
         let terminalPublicId = configuration.publicId
-        let baseUrl = configuration.apiUrl
+        
+        guard let apiUrl = configuration.apiUrl else {
+            return
+        }
         
         guard let status = GatewayRequest.payButtonStatus else {
-            loaderView.startAnimated(LoaderType.loaderText.toString())
+            loaderView.startAnimated("ttp_update_loader".localized)
 
-            GatewayRequest.getTerminalConfiguration(baseURL: baseUrl, terminalPublicId: terminalPublicId) { [weak self] status in
+            GatewayRequest.getTerminalConfiguration(baseURL: apiUrl, terminalPublicId: terminalPublicId) { [weak self] status in
                 guard let self = self, let status = status else {
                     self?.showAlert(title: .noData, message: .noConnection) {
                         self?.presentesionView(false) {
@@ -252,7 +258,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             }
             
             if emailTextField.text?.emailIsValid() == false {
-                showErrorStateForEmail(with: EmailType.incorrectEmail.toString() , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
+                showErrorStateForEmail(with: "ttpsdk_text_options_email_error".localized , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
                 self.setButtonsAndContainersEnabled(isEnabled: false)
             }
         }
@@ -262,7 +268,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             emailTextField.isUserInteractionEnabled = true
 
             if emailTextField.text?.emailIsValid() == false {
-                showErrorStateForEmail(with: EmailType.incorrectEmail.toString() , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
+                showErrorStateForEmail(with: "ttpsdk_text_options_email_error".localized , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
                 self.setButtonsAndContainersEnabled(isEnabled: false)
             }
             
@@ -282,7 +288,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     }
     
     private func normalEmailState() {
-        self.emailPlaceholder.text = EmailType.defaultEmail.toString()
+        self.emailPlaceholder.text = "ttpsdk_text_options_email_title".localized
         self.footer.emailBorderColor = UIColor.mainBlue
         self.emailTextField.textColor = UIColor.mainText
         self.emailPlaceholder.textColor = UIColor.border
@@ -300,7 +306,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     }
     
     private func setupEmailPlaceholder() {
-        emailPlaceholder.text = configuration.requireEmail ? EmailType.receiptEmail.toString() : EmailType.defaultEmail.toString()
+        emailPlaceholder.text = configuration.requireEmail ? "ttpsdk_text_options_email_title_2".localized : "ttpsdk_text_options_email_title".localized
     }
     
     private func configureContainers() {
@@ -620,7 +626,7 @@ extension PaymentOptionsForm: UITextFieldDelegate {
                 
             }
             else {
-                showErrorStateForEmail(with: EmailType.incorrectEmail.toString() , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
+                showErrorStateForEmail(with: "ttpsdk_text_options_email_error".localized , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
                 self.setButtonsAndContainersEnabled(isEnabled: false)
             }
         }
@@ -651,7 +657,7 @@ extension PaymentOptionsForm: UITextFieldDelegate {
         
         if emailIsValid == false {
             setButtonsAndContainersEnabled(isEnabled: false)
-            showErrorStateForEmail(with: EmailType.incorrectEmail.toString() , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
+            showErrorStateForEmail(with: "ttpsdk_text_options_email_error".localized , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
         } else {
             footer.emailBorderColor = UIColor.border
             setButtonsAndContainersEnabled(isEnabled: true)

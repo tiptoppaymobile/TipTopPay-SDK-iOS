@@ -29,6 +29,7 @@ public class Currency {
     static let zar: String = "ZAR"        //    Южноафриканский рэнд
     static let uzs: String = "UZS"        //    Узбекский сум
     static let bgl: String = "BGL"        //    Болгарский лев
+    static let mxn: String = "MXN"        //    Мексиканское песо
     
     static func getCurrencySign(code: String) -> String {
         switch code {
@@ -40,6 +41,10 @@ public class Currency {
                 return .EURO_SIGN
             case gbp:
                 return .GBP_SIGN
+            case mxn:
+                return "MXN"
+            case kzt:
+               return "KZT"
             default:
                 return code
         }

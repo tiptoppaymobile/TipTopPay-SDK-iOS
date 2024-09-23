@@ -30,20 +30,20 @@ public class PaymentProcessForm: PaymentForm {
         func getMessage() -> String? {
             switch self {
             case .inProgress:
-                return "Оплата в процессе"
+                return "ttpsdk_text_process_title".localized
             case .succeeded:
-                return "Оплата прошла успешно"
+                return "ttpsdk_text_process_title_success".localized
             case .failed(let message):
-                return message ?? "Операция отклонена"
+                return message ?? "ttpsdk_text_process_title_error".localized
             }
         }
         
         func getActionButtonTitle() -> String? {
             switch self {
             case .succeeded:
-                return "Отлично!"
+                return "ttpsdk_text_process_button_success".localized
             case .failed:
-                return "Повторить оплату"
+                return "ttpsdk_text_process_button_error".localized
             default:
                 return nil
             }
@@ -132,6 +132,8 @@ public class PaymentProcessForm: PaymentForm {
         
         messageLabel.textColor = .mainText
         secondDescriptionLabel.textColor = .colorProgressText
+        messageLabel.text = "ttpsdk_text_process_title".localized
+        selectPaymentButton.setTitle("ttpsdk_text_options_title".localized, for: .normal)
     }
     
     

@@ -103,12 +103,9 @@ class DemoViewController: BaseViewController {
             postcode: payerPostcode
         )
 
-        let paymentData = TipTopPayData()
-            .setAmount(amount)
-            .setCurrency(currency)
+        let paymentData = TipTopPayData(currency: currency, amount: amount)
             .setApplePayMerchantId(Constants.applePayMerchantID)
             .setCardholderName("TipTop SDK")
-            .setIpAddress("98.21.123.32")
             .setInvoiceId(invoiceId)
             .setDescription(descript)
             .setAccountId(account)
@@ -117,6 +114,7 @@ class DemoViewController: BaseViewController {
             .setJsonData(jsonData)
 
         let configuration = TipTopPayConfiguration(
+            region: .KZ,
             publicId: publicId,
             paymentData: paymentData,
             delegate: self,

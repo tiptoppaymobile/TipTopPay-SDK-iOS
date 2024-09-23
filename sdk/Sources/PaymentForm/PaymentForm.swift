@@ -13,7 +13,9 @@ import WebKit
 typealias PaymentCallback = (_ status: Bool, _ canceled: Bool, _ trasaction: Transaction?, _ errorMessage: String?) -> ()
 
 public class PaymentForm: BaseViewController {
+    
     // MARK: - Public Properties
+    
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var threeDsCloseButton: Button?
@@ -22,7 +24,7 @@ public class PaymentForm: BaseViewController {
     
     var configuration: TipTopPayConfiguration!
     
-    lazy var network: TipTopPayApi = TipTopPayApi.init(publicId: self.configuration.publicId, apiUrl: self.configuration.apiUrl, source: .ttpForm)
+    lazy var network: TipTopPayApi = TipTopPayApi.init(publicId: self.configuration.publicId, apiUrl: self.configuration.apiUrl, source: .ttpForm, region: configuration.region)
     lazy var customTransitionDelegateInstance = FormTransitioningDelegate(viewController: self)
     
     // MARK: - Private Properties

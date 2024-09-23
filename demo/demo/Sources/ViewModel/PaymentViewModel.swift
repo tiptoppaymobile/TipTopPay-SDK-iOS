@@ -129,3 +129,8 @@ struct PaymentViewModel: Codable {
     }
 }
 
+extension String {
+    var localized: String {
+        NSLocalizedString(self, bundle: .main, comment: self)
+    }
+}

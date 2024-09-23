@@ -10,20 +10,22 @@ import Foundation
 
 extension String {
     static let bundleName = "TipTopPaySdkResources"
-    static let errorWord = "Ошибка"
-    static let noData = "Отсутствует соединение с сервером"
-    static let errorCreatingCryptoPacket = "Ошибка при создании крипто-пакета"
-    static let informationWord = "Информация"
-    static let noConnection = "Проверьте подключение к интернету"
-    static let infoOutdated = "Данные могли устареть"
-    static let noBankApps = "Приложение банка не найдено"
-    
+    static let errorWord = "ttpsdk_error_word".localized
+    static let noData = "ttpsdk_error_no_data".localized
+    static let errorCreatingCryptoPacket = "ttpsdk_error_creating_crypto".localized
+    static let informationWord = "ttpsdk_error_information".localized
+    static let noConnection = "ttpsdk_error_check_internet".localized
+    static let infoOutdated = "ttpsdk_error_outdated".localized
     static let RUBLE_SIGN = "\u{20BD}"
     static let EURO_SIGN = "\u{20AC}"
     static let GBP_SIGN = "\u{00A3}"
 }
 
 extension String {
+    
+    var localized: String {
+        NSLocalizedString(self, bundle: .mainSdk, comment: self)
+    }
 
     func formattedCardNumber() -> String {
         let mask = "XXXX XXXX XXXX XXXX XXX"

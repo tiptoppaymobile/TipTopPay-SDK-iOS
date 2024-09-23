@@ -9,7 +9,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "TipTopPay"
-  spec.version      = "1.0.4"
+  spec.version      = "1.0.5"
   spec.summary      = "Core library that allows you to use internet acquiring from TipTopPay in your app"
   spec.description  = "Core library that allows you to use internet acquiring from TipTopPay in your app!"
 
@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://gitlab.com/tiptoppay/mobile/tiptoppay-sdk-ios.git", :tag => "#{spec.version}" }
   spec.source_files  = 'Sources/**/*.swift'
 
-  spec.resource_bundles = { 'TipTopPaySDK' => ['Resources/**/*.{txt,json,png,jpeg,jpg,storyboard,xib,xcassets}']} 
+  spec.resource_bundles = { 'TipTopPaySDK' => ['Resources/**/*.{txt,json,png,jpeg,jpg,storyboard,xib,xcassets,strings}']} 
   
   spec.requires_arc = true
 

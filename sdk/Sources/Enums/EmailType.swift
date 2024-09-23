@@ -9,7 +9,6 @@
 import Foundation
 
 enum EmailType: String {
-    case incorrectEmail = "Некорректный e-mail"
     case receiptEmail = "E-mail для квитанции"
     case defaultEmail = "E-mail"
 

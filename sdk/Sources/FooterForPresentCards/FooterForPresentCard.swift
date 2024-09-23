@@ -22,6 +22,7 @@ final class FooterForPresentCard: UIView {
     @IBOutlet weak var attentionView: UIView!
     @IBOutlet weak var attentionImage: UIImageView!
     @IBOutlet private weak var paymentEmailLabel: UILabel!
+    @IBOutlet weak var paymentSaveLabel: UILabel!
     
     var isHiddenCardView: Bool {
         get { return receiptButton.superview?.isHidden ?? false }
@@ -94,6 +95,13 @@ final class FooterForPresentCard: UIView {
         emailLabel.textColor = .colorProgressText
         paymentEmailLabel.textColor = .colorProgressText
         
+        savingButton.setTitle("ttpsdk_text_options_save_card".localized, for: .normal)
+        receiptButton.setTitle("ttpsdk_text_options_email_checkbox".localized, for: .normal)
+        
+        emailLabel.text = "ttpsdk_text_options_email_title_2".localized
+        paymentEmailLabel.text = "ttpsdk_text_options_email_require".localized
+        paymentSaveLabel.text = "ttpsdk_text_options_card_be_saved".localized
+        
         receiptButton.setTitleColor(.colorTextButton, for: .normal)
         savingButton.setTitleColor(.colorTextButton, for: .normal)
         forcedInformationButton.setTitleColor(.colorTextButton, for: .normal)
@@ -111,8 +119,6 @@ final class FooterForPresentCard: UIView {
             $0.setImage(selected, for: .selected)
             $0.titleEdgeInsets = .init(top: 0, left: spasing, bottom: 0, right: -spasing)
             $0.contentEdgeInsets.right = spasing
-            $0.contentHorizontalAlignment = .center
-            $0.contentVerticalAlignment = .center
         }
         
         [defaultInformationButton, forcedInformationButton].forEach {
@@ -174,6 +180,11 @@ final class AlertInfoView: UIView {
         setupView()
     }
     
+    init(title: String) {
+        super.init(frame: .zero)
+        setupInfoLabelView(text: title)
+    }
+    
     var trianglPosition: CGFloat {
         get { triangleConstraint.constant}
         set {
@@ -185,8 +196,10 @@ final class AlertInfoView: UIView {
     private func setupView() {
         self.backgroundColor = .clear
         let array = [
-            "Нажимая галочку, вы соглашаетесь с тем, что данные вашей карты сохранятся. Это означает, что при повторной оплате вам не надо будет вводить платежные реквизиты заново.",
-            "Мы не сможем проводить никакие операции по вашей карте без вашего согласия"
+            
+            "ttpsdk_text_options_save_card_popup_1".localized,
+            
+            "ttpsdk_text_options_save_card_popup_2".localized
         ]
             .map ({ string in
                 let label = UILabel()
@@ -251,6 +264,50 @@ final class AlertInfoView: UIView {
         NSLayoutConstraint.activate([
             triangleView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2),
             triangleView.centerYAnchor.constraint(equalTo: view.bottomAnchor, constant: -5),
+            triangleView.widthAnchor.constraint(equalTo: triangleView.heightAnchor, multiplier: 1)
+        ])
+        
+        triangleConstraint = triangleView.centerXAnchor.constraint(equalTo: self.leadingAnchor)
+        triangleConstraint.isActive = true
+    }
+    
+    private func setupInfoLabelView(text: String) {
+        self.backgroundColor = .clear
+     
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13)
+        label.textColor = .whiteColor
+        label.numberOfLines = 0
+        label.addSpacing(text: text, 5)
+        label.sizeToFit()
+        
+        let view = UIView()
+        view.addSubview(label)
+        
+        
+        let triangleView = UIView()
+        triangleView.backgroundColor = .colorAlertView
+        let transform = CGAffineTransform(rotationAngle: .pi / 1 / 4)
+        triangleView.transform = transform
+        triangleView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = .colorAlertView
+        view.layer.cornerRadius = 8
+        view.clipsToBounds = true
+        
+        label.fullConstraint(top: 20, bottom: -20, leading: 20, trailing: -20)
+        self.addSubview(triangleView)
+        self.addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: topAnchor),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            view.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 366 / 462),
+            
+            triangleView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2),
+            triangleView.heightAnchor.constraint(equalToConstant: 15),
             triangleView.widthAnchor.constraint(equalTo: triangleView.heightAnchor, multiplier: 1)
         ])
         

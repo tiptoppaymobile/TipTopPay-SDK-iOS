@@ -6,32 +6,22 @@ public class TipTopPayApi {
         case ttpForm = "TipTopPay SDK iOS (Default form)"
         case ownForm = "TipTopPay SDK iOS (Custom form)"
     }
-    
-    public static let baseURLString = "https://api.tiptoppay.kz/"
-    
+
     private let defaultCardHolderName = "TipTopPay SDK"
-    
     private let threeDsSuccessURL = "https://tiptoppay.kz/success"
     private let threeDsFailURL = "https://tiptoppay.kz/fail"
-    
     private let publicId: String
     private let apiUrl: String
     private let source: Source
         
-    public required convenience init(publicId: String, apiUrl: String) {
-        self.init(publicId: publicId, apiUrl: apiUrl, source: .ownForm)
-    }
-    
-    init(publicId: String, apiUrl: String = baseURLString, source: Source) {
+    init(publicId: String, apiUrl: String?, source: Source, region: Region) {
         self.publicId = publicId
-        
-        if (apiUrl.isEmpty) {
-            self.apiUrl = TipTopPayApi.baseURLString
-        } else {
-            self.apiUrl = apiUrl
-        }
-        
         self.source = source
+        if (apiUrl.isNilOrEmpty) {
+            self.apiUrl = region.getApiUrl()
+        } else {
+            self.apiUrl = apiUrl ?? ""
+        }
     }
     
     public class func getBankInfo(cardNumber: String, completion: ((_ bankInfo: BankInfo?, _ error: TipTopPayError?) -> ())?) {
@@ -145,7 +135,6 @@ public class TipTopPayApi {
         var parameters: [String: Any] = [
             "Amount" : paymentData.amount, // Сумма платежа (Обязательный)
             "Currency" : paymentData.currency, // Валюта (Обязательный)
-            "IpAddress" : paymentData.ipAddress ?? "",
             "Name" : paymentData.cardholderName ?? defaultCardHolderName, // Имя держателя карты в латинице (Обязательный для всех платежей кроме Apple Pay и Google Pay)
             "CardCryptogramPacket" : cardCryptogramPacket, // Криптограмма платежных данных (Обязательный)
             "Email" : email ?? "", // E-mail, на который будет отправлена квитанция об оплате

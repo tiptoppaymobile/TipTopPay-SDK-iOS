@@ -21,6 +21,7 @@
                 <outlet property="emailView" destination="675-u6-DNR" id="hzC-rl-B4f"/>
                 <outlet property="forcedInformationButton" destination="26U-nN-ckf" id="5h0-sO-LL0"/>
                 <outlet property="paymentEmailLabel" destination="zF7-Dh-euh" id="GiC-jx-fi2"/>
+                <outlet property="paymentSaveLabel" destination="TGB-Fq-62T" id="eto-F6-0Sf"/>
                 <outlet property="receiptButton" destination="Kzz-tC-Jp9" id="HKd-3C-8zq"/>
                 <outlet property="savingButton" destination="PHN-Oo-Zyg" id="zuY-2N-3f1"/>
             </connections>
@@ -37,18 +38,18 @@
                             <rect key="frame" x="0.0" y="0.0" width="488" height="24"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="PHN-Oo-Zyg">
-                                    <rect key="frame" x="0.0" y="0.0" width="212" height="24"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="30" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="24" id="iZX-6r-HBa"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" title="Согласен сохранить карту">
+                                    <state key="normal">
                                         <color key="titleColor" name="color_progress_text"/>
                                     </state>
                                 </button>
                                 <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UQD-kY-gsw">
-                                    <rect key="frame" x="214" y="0.0" width="24" height="24"/>
+                                    <rect key="frame" x="32" y="0.0" width="24" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="24" id="9p7-SQ-lah"/>
                                         <constraint firstAttribute="height" constant="24" id="pcW-Wd-Iri"/>
@@ -68,16 +69,16 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQs-cj-3a9">
-                            <rect key="frame" x="0.0" y="269" width="488" height="24"/>
+                            <rect key="frame" x="0.0" y="262" width="488" height="31"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kzz-tC-Jp9">
-                                    <rect key="frame" x="0.0" y="0.0" width="253" height="24"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Kzz-tC-Jp9">
+                                    <rect key="frame" x="0.0" y="0.0" width="30" height="31"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="24" id="X2B-l3-4m4"/>
+                                        <constraint firstAttribute="height" constant="31" id="X2B-l3-4m4"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="tintColor" name="color_text_button"/>
-                                    <state key="normal" title="Отправить квитанцию на E-mail">
+                                    <state key="normal">
                                         <color key="titleColor" name="color_progress_text"/>
                                     </state>
                                 </button>
@@ -96,7 +97,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Urj-c0-jE6" userLabel="EmailInputView" customClass="View" customModule="TipTopPay">
                                     <rect key="frame" x="0.0" y="0.0" width="488" height="56"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E-mail для квитанции" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="git-3m-Axs">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="git-3m-Axs">
                                             <rect key="frame" x="16" y="8" width="456" height="18"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="18" id="cCg-Py-C7c"/>
@@ -174,7 +175,7 @@
                                         <constraint firstAttribute="width" secondItem="mMl-kx-Hih" secondAttribute="height" multiplier="1:1" id="kxP-bh-vzG"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Для оплаты введите E-mail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zF7-Dh-euh" userLabel="Для оплаты введите E-mail">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zF7-Dh-euh" userLabel="Для оплаты введите E-mail">
                                     <rect key="frame" x="24" y="0.0" width="454" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="24" id="tWh-zb-QZp"/>
@@ -197,17 +198,17 @@
                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEn-xi-VzK">
                             <rect key="frame" x="0.0" y="293" width="488" height="24"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="При оплате данные вашей карты сохранятся" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TGB-Fq-62T">
-                                    <rect key="frame" x="0.0" y="0.0" width="283.66666666666669" height="24"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TGB-Fq-62T">
+                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                     <color key="textColor" name="color_progress_text"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="26U-nN-ckf">
-                                    <rect key="frame" x="286.66666666666669" y="0.0" width="24" height="24"/>
+                                    <rect key="frame" x="3" y="0.0" width="20" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="24" id="Qjw-5r-YZS"/>
-                                        <constraint firstAttribute="width" constant="24" id="bU4-6u-Z1d"/>
+                                        <constraint firstAttribute="width" constant="20" id="bU4-6u-Z1d"/>
                                     </constraints>
                                     <color key="tintColor" red="0.5490196078431373" green="0.58039215686274503" blue="0.62352941176470589" alpha="1" colorSpace="calibratedRGB"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -216,7 +217,7 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="TGB-Fq-62T" firstAttribute="leading" secondItem="LEn-xi-VzK" secondAttribute="leading" id="2ZX-cP-R7w"/>
-                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="26U-nN-ckf" secondAttribute="trailing" constant="5" id="Fft-tB-dBW"/>
+                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="26U-nN-ckf" secondAttribute="trailing" id="Fft-tB-dBW"/>
                                 <constraint firstAttribute="bottom" secondItem="TGB-Fq-62T" secondAttribute="bottom" id="KeP-DU-ONd"/>
                                 <constraint firstItem="26U-nN-ckf" firstAttribute="centerY" secondItem="LEn-xi-VzK" secondAttribute="centerY" id="Po6-Ol-flL"/>
                                 <constraint firstItem="26U-nN-ckf" firstAttribute="top" secondItem="LEn-xi-VzK" secondAttribute="top" id="TdT-Vd-ZxJ"/>

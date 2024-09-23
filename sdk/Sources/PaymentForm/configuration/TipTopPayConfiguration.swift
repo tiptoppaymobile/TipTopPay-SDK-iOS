@@ -6,6 +6,15 @@
 //  Copyright © 2020 TipTopPay. All rights reserved.
 //
 
+public enum Region: String {
+    case MX = "https://api.tiptoppay.mx/"
+    case KZ = "https://api.tiptoppay.kz/"
+    
+    func getApiUrl() -> String {
+        return self.rawValue
+    }
+}
+
 public class TipTopPayConfiguration {
     let publicId: String
     let paymentData: TipTopPayData
@@ -15,11 +24,11 @@ public class TipTopPayConfiguration {
     let requireEmail: Bool
     let useDualMessagePayment: Bool
     let disableApplePay: Bool
-    let apiUrl: String
-    let customListBanks: Bool
+    var apiUrl: String?
+    let region: Region
 
-    public init(publicId: String, paymentData: TipTopPayData, delegate: TipTopPayDelegate?, uiDelegate: TipTopPayUIDelegate?, scanner: PaymentCardScanner?,
-                requireEmail: Bool = false, useDualMessagePayment: Bool = false, disableApplePay: Bool = false, apiUrl: String = "https://api.tiptoppay.kz/", customListBanks: Bool = false) {
+    public init(region: Region, publicId: String, paymentData: TipTopPayData, delegate: TipTopPayDelegate?, uiDelegate: TipTopPayUIDelegate?, scanner: PaymentCardScanner?,
+                requireEmail: Bool = false, useDualMessagePayment: Bool = false, disableApplePay: Bool = false, apiUrl: String?, customListBanks: Bool = false) {
         self.publicId = publicId
         self.paymentData = paymentData
         self.paymentDelegate = TipTopPayDelegateImpl.init(delegate: delegate)
@@ -28,7 +37,13 @@ public class TipTopPayConfiguration {
         self.requireEmail = requireEmail
         self.useDualMessagePayment = useDualMessagePayment
         self.disableApplePay = disableApplePay
+        self.region = region
         self.apiUrl = apiUrl
-        self.customListBanks = customListBanks
+        
+        if apiUrl.isNilOrEmpty {
+            self.apiUrl = self.region.getApiUrl()
+        } else {
+            self.apiUrl = apiUrl
+        }
     }
 }

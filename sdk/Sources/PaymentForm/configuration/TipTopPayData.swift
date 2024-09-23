@@ -56,14 +56,13 @@ public struct TipTopPayDataPayer: Codable {
 
 public class TipTopPayData {
     private (set) var payer: TipTopPayDataPayer?
-    private (set) var amount: String = "0"
-    private (set) var currency: String = "RUB"
+    private (set) var amount: String
+    private (set) var currency: String
     private (set) var applePayMerchantId: String?
     private (set) var cardholderName: String?
     private (set) var description: String?
     private (set) var accountId: String?
     private (set) var invoiceId: String?
-    private (set) var ipAddress: String?
     private (set) var cultureName: String?
     private (set) var jsonData: String?
     
@@ -71,7 +70,9 @@ public class TipTopPayData {
     var saveCard: Bool?
     var cryptogram: String?
     
-    public init() {
+    public init(currency: String, amount: String) {
+        self.currency = currency
+        self.amount = amount
     }
     
     public func setAmount(_ amount: String) -> TipTopPayData {
@@ -80,11 +81,7 @@ public class TipTopPayData {
     }
     
     public func setCurrency(_ currency: String) -> TipTopPayData {
-        if (currency.isEmpty) {
-            self.currency = "RUB"
-        } else {
-            self.currency = currency
-        }
+        self.currency = currency
         return self
     }
     
@@ -110,11 +107,6 @@ public class TipTopPayData {
     
     public func setInvoiceId(_ invoiceId: String?) -> TipTopPayData {
         self.invoiceId = invoiceId
-        return self
-    }
-    
-    public func setIpAddress(_ ipAddress: String?) -> TipTopPayData {
-        self.ipAddress = ipAddress
         return self
     }
     

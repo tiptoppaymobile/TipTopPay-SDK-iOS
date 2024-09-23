@@ -9,35 +9,42 @@
 import UIKit
 
 public class PaymentCardForm: PaymentForm {
+    
     // MARK: - Private properties
+    
     @IBOutlet private weak var cardNumberTextField: TextField!
     @IBOutlet private weak var cardExpDateTextField: TextField!
     @IBOutlet private weak var cardCvvTextField: TextField!
     @IBOutlet private weak var containerCardBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var mainCardStackView: UIStackView!
     @IBOutlet private weak var iconCvvCard: UIImageView!
-    @IBOutlet private weak var containerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var containerHeightConstraint: NSLayoutConstraint?
+    @IBOutlet private weak var isActiveTopConstraint: NSLayoutConstraint?
     @IBOutlet private weak var scanButton: Button!
+    @IBOutlet private weak var infoButton: UIButton!
     @IBOutlet private weak var payButton: Button!
     @IBOutlet private weak var cardTypeIcon: UIImageView!
     @IBOutlet private weak var cardLabel: UILabel!
     @IBOutlet private weak var cardView: View!
     @IBOutlet private weak var expDateView: View!
     @IBOutlet private weak var cvvView: View!
+    @IBOutlet private weak var threeDsView: UIView!
     @IBOutlet private weak var cardPlaceholder: UILabel!
     @IBOutlet private weak var expDatePlaceholder: UILabel!
     @IBOutlet private weak var cvvPlaceholder: UILabel!
     @IBOutlet private weak var stackInpitMainStackView: UIStackView!
     @IBOutlet private weak var eyeOpenButton: Button!
     @IBOutlet private weak var paymentCardLabel: UILabel!
-    
+    @IBOutlet private weak var paymentAttentionLabel: UILabel!
+    private let alertInfoView = AlertInfoView(title: "ttp_sdk_three_ds_popup".localized)
+    private var constraint: NSLayoutConstraint!
     lazy var defaultHeight: CGFloat = self.mainCardStackView.frame.height
-    let dismissibleHigh: CGFloat = 400
+    let dismissibleHigh: CGFloat = 500
     let maximumContainerHeight: CGFloat = UIScreen.main.bounds.height - 64
     lazy var currentContainerHeight: CGFloat = mainCardStackView.frame.height
     
     var onPayClicked: ((_ cryptogram: String, _ email: String?) -> ())?
-
+    
     @discardableResult
     public class func present(with configuration: TipTopPayConfiguration, from: UIViewController, completion: (() -> ())?) -> PaymentForm? {
         let storyboard = UIStoryboard.init(name: "PaymentForm", bundle: Bundle.mainSdk)
@@ -87,25 +94,33 @@ public class PaymentCardForm: PaymentForm {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        alertInfoView.isHidden = true
         setupEyeButton()
         setupPanGesture()
-        containerHeightConstraint.constant = mainCardStackView.frame.height
+        containerHeightConstraint?.constant = mainCardStackView.frame.height
+        paymentAttentionLabel.text = "ttp_sdk_three_ds_label".localized
+        
+        if configuration.region == .MX {
+            threeDsView.isHidden = false
+        }
         
         let paymentData = self.configuration.paymentData
         
-        self.payButton.setTitle("Оплатить \(paymentData.amount) \(Currency.getCurrencySign(code: paymentData.currency))", for: .normal)
+        let payTitle = "ttpsdk_text_card_pay_button".localized
+        
+        self.payButton.setTitle("\(payTitle) \(paymentData.amount) \(Currency.getCurrencySign(code: paymentData.currency))", for: .normal)
         
         self.payButton.onAction = { [weak self] in
             guard let self = self else {
                 return
             }
-
+            
             guard self.isValid(), let cryptogram = Card.makeCardCryptogramPacket(self.cardNumberTextField.text!, expDate: self.cardExpDateTextField.cardExpText!, cvv: self.cardCvvTextField.text!, merchantPublicID: self.configuration.publicId)
             else {
                 self.showAlert(title: .errorWord, message: String.errorCreatingCryptoPacket)
                 return
             }
-
+            
             DispatchQueue.main.async {
                 self.dismiss(animated: true) { [weak self] in
                     guard let self = self else {
@@ -141,6 +156,8 @@ public class PaymentCardForm: PaymentForm {
         hideKeyboardWhenTappedAround()
         setButtonsAndContainersEnabled(isEnabled: false)
         paymentCardLabel.textColor = .mainText
+        cardLabel.text = "ttpsdk_text_card_hint_number".localized
+        paymentCardLabel.text = "ttpsdk_text_card_title".localized
         
         cardNumberTextField.textColor = .mainText
         cardExpDateTextField.textColor = .mainText
@@ -148,116 +165,103 @@ public class PaymentCardForm: PaymentForm {
         
         cardLabel.textColor = .colorProgressText
         expDatePlaceholder.textColor = .colorProgressText
+        expDatePlaceholder.text = "ttpsdk_text_card_hint_exp".localized
         cvvPlaceholder.textColor = .colorProgressText
+        cvvPlaceholder.text = "ttpsdk_text_card_hint_cvv".localized
+        
+        setupAlertView()
+        infoButton.addTarget(self, action: #selector(infoButtonAction(_:)), for: .touchUpInside)
     }
     
+    private func setupAlertView() {
+        view.addSubview(alertInfoView)
+        alertInfoView.translatesAutoresizingMaskIntoConstraints = false
+        alertInfoView.alpha = 0
+        
+        NSLayoutConstraint.activate([
+            alertInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            alertInfoView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1),
+        ])
+        
+        constraint = alertInfoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        constraint.isActive = true
+    }
+    
+    private var animator: UIViewPropertyAnimator?
+
     func setupPanGesture() {
-        // add pan gesture recognizer to the view controller's view (the whole screen)
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handlePanGesture(gesture:)))
-        // change to false to immediately listen on gesture movement
         panGesture.delaysTouchesBegan = false
         panGesture.delaysTouchesEnded = false
-        view.addGestureRecognizer(panGesture)
+        containerView.addGestureRecognizer(panGesture)
     }
-    
+
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        animatePresentContainer()
-        containerHeightConstraint.constant = defaultHeight
+        containerHeightConstraint?.constant = -defaultHeight
+        presentThreeDsAttentionView(isOn: true)
     }
-    
+
+    private func presentThreeDsAttentionView(isOn: Bool) {
+        UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseInOut, animations: {
+            self.isActiveTopConstraint?.isActive = !isOn
+            self.view.layoutIfNeeded()
+        })
+    }
+
     // MARK: Pan gesture handler
+
     @objc func handlePanGesture(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
-        // Drag to top will be minus value and vice versa
-        
-        // Get drag direction
         let isDraggingDown = translation.y > 0
-        
-        // New height is based on value of dragging plus current container height
+
+        guard isDraggingDown else { return }
+
         let newHeight = currentContainerHeight - translation.y
-        
-        // Handle based on gesture state
+
         switch gesture.state {
         case .changed:
-            // This state will occur when user is dragging
-            if newHeight < maximumContainerHeight {
-                // Keep updating the height constraint
-                containerHeightConstraint?.constant = newHeight
-                // refresh layout
+            if newHeight > defaultHeight && newHeight < maximumContainerHeight {
+                containerHeightConstraint?.constant = -newHeight
                 view.layoutIfNeeded()
             }
-            
-            if newHeight > defaultHeight && !isDraggingDown  {
-                //self.emailTextField.becomeFirstResponder()
-                UIView.animate(withDuration: 0.9) {
-                    self.containerHeightConstraint?.constant = self.defaultHeight
-                }
-            }
         case .ended:
-            // This happens when user stop drag,
-            // so we will get the last height of container
-            
-            // Condition 1: If new height is below min, dismiss controller
             if newHeight < dismissibleHigh {
-                self.animateDismissView()
-                let parent = self.presentingViewController
-                self.dismiss(animated: true) {
-                    if let parent = parent {
-                        if !self.configuration.disableApplePay {
-                            PaymentForm.present(with: self.configuration, from: parent)
-                        } else {
-                            PaymentForm.present(with: self.configuration, from: parent)
+                UIView.animate(withDuration: 0.9, animations: {
+                    self.animateDismissView()
+                }) { _ in
+                    let parent = self.presentingViewController
+                    self.dismiss(animated: true) {
+                        if let parent = parent {
+                            if !self.configuration.disableApplePay {
+                                PaymentForm.present(with: self.configuration, from: parent)
+                            } else {
+                                PaymentForm.present(with: self.configuration, from: parent)
+                            }
                         }
                     }
                 }
-                
-            }
-            else if newHeight < defaultHeight {
-                // Condition 2: If new height is below default, animate back to default
-                animateContainerHeight(defaultHeight)
-            }
-            else if newHeight < maximumContainerHeight && isDraggingDown {
-                // Condition 3: If new height is below max and going down, set to default height
-                animateContainerHeight(defaultHeight)
+            } else {
+                UIView.animate(withDuration: 0.9) {
+                    self.animateContainerHeight(self.defaultHeight)
+                }
             }
         default:
             break
         }
     }
-    
+
     func animateContainerHeight(_ height: CGFloat) {
-        UIView.animate(withDuration: 0.4) {
-            // Update container height
-            self.containerCardBottomConstraint?.constant = height
-            // Call this to trigger refresh constraint
-            self.view.layoutIfNeeded()
-        }
-        // Save current height
+        self.containerHeightConstraint?.constant = -height
+        self.view.layoutIfNeeded()
         currentContainerHeight = height
     }
-    
-    // MARK: Present and dismiss animation
-    func animatePresentContainer() {
-        // update bottom constraint in animation block
-        UIView.animate(withDuration: 0.3) {
-            self.containerCardBottomConstraint?.constant = 0
-            // call this to trigger refresh constraint
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    func animateDismissView() {
-        // hide main view by updating bottom constraint in animation block
-        self.dismiss(animated: false)
-        UIView.animate(withDuration: 0.3) {
-            self.containerCardBottomConstraint?.constant = self.defaultHeight
-            
-            // call this to trigger refresh constraint
-            self.view.layoutIfNeeded()
-        }
-    }
 
+    func animateDismissView() {
+        self.containerHeightConstraint?.constant = -self.view.bounds.height
+        self.view.layoutIfNeeded()
+    }
+    
     func setInputFieldValues(fieldType: InputFieldType, placeholderColor: UIColor, placeholderText: String, borderViewColor: UIColor, textFieldColor: UIColor? = .mainText ) {
         switch fieldType {
         case .card:
@@ -374,7 +378,7 @@ extension PaymentCardForm {
                 cardNumberTextField.text = cardNumber
                 
                 if !cardNumber.isEmpty || !Card.isCardNumberValid(cardNumber) {
-                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctCard.toString(), borderViewColor: ValidState.normal.color, textFieldColor: ValidState.text.color)
+                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_number".localized, borderViewColor: ValidState.normal.color, textFieldColor: ValidState.text.color)
                 }
             }
             
@@ -383,7 +387,7 @@ extension PaymentCardForm {
                 cardExpDateTextField.cardExpText = cardExp
                 
                 if !cardExp.isEmpty || !Card.isExpDateValid(cardExp) {
-                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctExpDate.toString(), borderViewColor: ValidState.normal.color, textFieldColor: ValidState.text.color)
+                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_exp".localized, borderViewColor: ValidState.normal.color, textFieldColor: ValidState.text.color)
                 }
             }
             
@@ -417,12 +421,12 @@ extension PaymentCardForm {
                 updatePaymentSystemIcon(cardNumber: cardNumber)
                 
                 if cardNumber.isEmpty {
-                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctCard.toString(), borderViewColor: ValidState.normal.color)
+                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_number".localized, borderViewColor: ValidState.normal.color)
                     return
                 }
                 
                 if Card.isCardNumberValid(cardNumber) {
-                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctCard.toString(), borderViewColor: ValidState.normal.color)
+                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_number".localized, borderViewColor: ValidState.normal.color)
                 }
                 
                 _ = cardNumber.clearCardNumber()
@@ -439,12 +443,12 @@ extension PaymentCardForm {
                 cardExpDateTextField.isErrorMode = false
                 
                 if cardExp.isEmpty {
-                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctExpDate.toString(), borderViewColor: ValidState.normal.color)
+                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_exp".localized, borderViewColor: ValidState.normal.color)
                     return
                 }
                 
                 if Card.isExpDateValid(cardExp) {
-                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctExpDate.toString(), borderViewColor: ValidState.normal.color)
+                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_exp".localized, borderViewColor: ValidState.normal.color)
                 }
             }
             
@@ -459,7 +463,7 @@ extension PaymentCardForm {
                 cardCvvTextField.isErrorMode = false
                 
                 if text.isEmpty {
-                    setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctCvv.toString(), borderViewColor: ValidState.normal.color)
+                    setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_cvv".localized, borderViewColor: ValidState.normal.color)
                     iconCvvCard.isHidden = false
                     return
                 }
@@ -467,7 +471,7 @@ extension PaymentCardForm {
                 let cardNumber = cardNumberTextField.text?.formattedCardNumber()
                 
                 if Card.isCvvValid(cardNumber, text) {
-                    setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.border.color, placeholderText: PlaceholderType.correctCvv.toString(), borderViewColor: ValidState.normal.color)
+                    setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.border.color, placeholderText: "ttpsdk_text_card_hint_cvv".localized, borderViewColor: ValidState.normal.color)
                 }
                 
                 if text.count == 4 {
@@ -489,10 +493,10 @@ extension PaymentCardForm {
                 cardNumberTextField.text = cardNumber
                 
                 if !Card.isCardNumberValid(cardNumber) {
-                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.error.color, placeholderText: PlaceholderType.incorrectCard.toString(), borderViewColor: ValidState.error.color)
+                    setInputFieldValues(fieldType: .card, placeholderColor: ValidState.error.color, placeholderText: "ttpsdk_text_card_hint_number_incorrect".localized, borderViewColor: ValidState.error.color)
                     
                     if cardNumber.isEmpty {
-                        setInputFieldValues(fieldType: .card, placeholderColor: ValidState.error.color, placeholderText: PlaceholderType.correctCard.toString(), borderViewColor: ValidState.error.color)
+                        setInputFieldValues(fieldType: .card, placeholderColor: ValidState.error.color, placeholderText: "ttpsdk_text_card_hint_number".localized, borderViewColor: ValidState.error.color)
                     }
                 }
                 else {
@@ -506,10 +510,10 @@ extension PaymentCardForm {
                 cardExpDateTextField.cardExpText = cardExp
                 
                 if !Card.isExpDateValid(cardExp) {
-                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.error.color, placeholderText: PlaceholderType.incorrectExpDate.toString(), borderViewColor: ValidState.error.color)
+                    setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.error.color, placeholderText: "ttpsdk_text_card_hint_exp_error".localized, borderViewColor: ValidState.error.color)
                     
                     if cardExp.isEmpty {
-                        setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.error.color, placeholderText: PlaceholderType.correctExpDate.toString(), borderViewColor: ValidState.error.color)
+                        setInputFieldValues(fieldType: .expDate, placeholderColor: ValidState.error.color, placeholderText: "ttpsdk_text_card_hint_exp".localized, borderViewColor: ValidState.error.color)
                     }
                 }
                 else {
@@ -525,10 +529,10 @@ extension PaymentCardForm {
                 let cardNumber = cardNumberTextField.text?.formattedCardNumber()
                 
                 if !Card.isCvvValid(cardNumber, cardCvv) {
-                    setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.error.color, placeholderText: PlaceholderType.incorrectCvv.toString(), borderViewColor: ValidState.error.color)
+                    setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.error.color, placeholderText: "ttpsdk_text_card_hint_cvv_error".localized, borderViewColor: ValidState.error.color)
                     
                     if cardCvv.isEmpty {
-                        setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.error.color, placeholderText: PlaceholderType.correctCvv.toString(), borderViewColor: ValidState.error.color)
+                        setInputFieldValues(fieldType: .cvv, placeholderColor: ValidState.error.color, placeholderText: "ttpsdk_text_card_hint_cvv".localized, borderViewColor: ValidState.error.color)
                     }
                 }
                 else {
@@ -541,37 +545,68 @@ extension PaymentCardForm {
         default: break
         }
     }
-
+    
     /// Should Return
-        /// - Parameter textField:
-        @objc private func shouldReturn(_ textField: UITextField) {
-
-            switch textField {
-
-            case cardNumberTextField:
-
-                if let cardNumber = self.cardNumberTextField.text?.formattedCardNumber() {
-                    self.cardNumberTextField.resignFirstResponder()
-                    if Card.isCardNumberValid(cardNumber) {
-                        self.cardExpDateTextField.becomeFirstResponder()
-                    }
+    /// - Parameter textField:
+    @objc private func shouldReturn(_ textField: UITextField) {
+        
+        switch textField {
+            
+        case cardNumberTextField:
+            
+            if let cardNumber = self.cardNumberTextField.text?.formattedCardNumber() {
+                self.cardNumberTextField.resignFirstResponder()
+                if Card.isCardNumberValid(cardNumber) {
+                    self.cardExpDateTextField.becomeFirstResponder()
                 }
-            case cardExpDateTextField:
-
-                if let cardExp = self.cardExpDateTextField.text?.formattedCardExp() {
-                    if cardExp.count == 5 {
-                        self.cardCvvTextField.becomeFirstResponder()
-                    }
-                }
-
-            case cardCvvTextField:
-
-                if let text = self.cardCvvTextField.text?.formattedCardCVV() {
-                    if text.count == 3 || text.count == 4 {
-                        self.cardCvvTextField.resignFirstResponder()
-                    }
-                }
-            default: break
             }
+        case cardExpDateTextField:
+            
+            if let cardExp = self.cardExpDateTextField.text?.formattedCardExp() {
+                if cardExp.count == 5 {
+                    self.cardCvvTextField.becomeFirstResponder()
+                }
+            }
+            
+        case cardCvvTextField:
+            
+            if let text = self.cardCvvTextField.text?.formattedCardCVV() {
+                if text.count == 3 || text.count == 4 {
+                    self.cardCvvTextField.resignFirstResponder()
+                }
+            }
+        default: break
         }
+    }
+}
+
+extension PaymentCardForm {
+    
+    @objc private func infoButtonAction(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        setupPositionAlertView(sender)
+        animation(sender.isSelected)
+    }
+    
+    //MARK: - AlertView
+    
+    private func setupPositionAlertView(_ sender: UIButton) {
+        let frame = sender.convert(sender.bounds, to: view)
+        let height = view.bounds.height - frame.midY + 12
+        let x = frame.midX
+        
+        constraint.constant = -height
+        alertInfoView.trianglPosition =  x
+    }
+    
+    //MARK: - animation AlertView
+    
+    private func animation(_ preview: Bool) {
+        self.alertInfoView.isHidden = false
+        UIView.animate(withDuration: 0.2) {
+            self.alertInfoView.alpha = preview ? 1 : 0
+        } completion: { _ in
+            if !preview { self.alertInfoView.isHidden = true }
+        }
+    }
 }
