@@ -65,9 +65,10 @@ public class PaymentProcessForm: PaymentForm {
     private var email: String?
     private var transactionId: Int64?
     private var isSaveCard: Bool? = nil
+    private var term: Int?
     
     @discardableResult
-    public class func present(with configuration: TipTopPayConfiguration, cryptogram: String?, email: String?, state: State = .inProgress, from: UIViewController, isSaveCard: Bool? = nil, completion: (() -> ())? = nil) -> PaymentForm? {
+    public class func present(with configuration: TipTopPayConfiguration, cryptogram: String?, email: String?, state: State = .inProgress, from: UIViewController, isSaveCard: Bool? = nil, term: Int? = nil, completion: (() -> ())? = nil) -> PaymentForm? {
         let storyboard = UIStoryboard.init(name: "PaymentForm", bundle: Bundle.mainSdk)
 
         let controller = storyboard.instantiateViewController(withIdentifier: "PaymentProcessForm") as! PaymentProcessForm        
@@ -76,6 +77,7 @@ public class PaymentProcessForm: PaymentForm {
         controller.email = email
         controller.state = state
         controller.isSaveCard = isSaveCard
+        controller.term = term
         
         controller.show(inViewController: from, completion: completion)
         
@@ -87,7 +89,7 @@ public class PaymentProcessForm: PaymentForm {
         self.updateUI(with: self.state)
         
         if let cryptogram = self.cryptogram {
-            if (configuration.useDualMessagePayment) {
+            if configuration.isUseDualMessagePayment {
                 self.auth(cardCryptogramPacket: cryptogram, email: self.email) { [weak self] status, canceled, transaction, errorMessage in
                     guard let self = self else {
                         return
@@ -108,7 +110,7 @@ public class PaymentProcessForm: PaymentForm {
                     }
                 }
             } else {
-                self.charge(cardCryptogramPacket: cryptogram, email: self.email) { [weak self] status, canceled, transaction, errorMessage in
+                self.charge(cardCryptogramPacket: cryptogram, email: self.email, term: term) { [weak self] status, canceled, transaction, errorMessage in
                     guard let self = self else {
                         return
                     }

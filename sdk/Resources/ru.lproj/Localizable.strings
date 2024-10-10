@@ -12,6 +12,7 @@
 "ttpsdk_error_information" = "Информация";
 "ttpsdk_error_check_internet" = "Проверьте подключение к интернету";
 "ttpsdk_error_outdated" = "Данные могли устареть";
+"ttpsdk_error_сorrect_data" = "Проверьте корректность данных";
 "ttp_update_loader" = "Загружаем способы оплаты";
 "ttpsdk_text_options_title" = "Выберите способ оплаты";
 "ttpsdk_text_options_title_2" = "Выбрать способ оплаты";

@@ -56,7 +56,6 @@ public struct TipTopPayDataPayer: Codable {
 
 public class TipTopPayData {
     private (set) var payer: TipTopPayDataPayer?
-    private (set) var amount: String
     private (set) var currency: String
     private (set) var applePayMerchantId: String?
     private (set) var cardholderName: String?
@@ -66,9 +65,13 @@ public class TipTopPayData {
     private (set) var cultureName: String?
     private (set) var jsonData: String?
     
+    var amount: String
     var email: String?
     var saveCard: Bool?
     var cryptogram: String?
+    var isCvvRequired: Bool?
+    var installmentConfigurations: [Configuration] = []
+    var isInstallmentsMode: Bool = false
     
     public init(currency: String, amount: String) {
         self.currency = currency

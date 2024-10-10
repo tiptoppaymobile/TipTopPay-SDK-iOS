@@ -14,8 +14,11 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     @IBOutlet private weak var payWithCardButton: Button!
     @IBOutlet private weak var footer: FooterForPresentCard!
     @IBOutlet private weak var mainAppleView: View!
-    @IBOutlet private weak var heightConstraint:NSLayoutConstraint!
+    @IBOutlet private weak var heightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var paymentLabel: UILabel!
+    @IBOutlet private weak var mainInstallmentsView: View!
+    @IBOutlet private weak var payWithInstallmentsButton: Button!
+    
     private let alertInfoView = AlertInfoView()
     
     private var emailTextField: TextField {
@@ -52,7 +55,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     private lazy var currentContainerHeight: CGFloat = containerView.bounds.height
     private var heightPresentView: CGFloat { return containerView.bounds.height }
     
-    var onCardOptionSelected: ((_  isSaveCard: Bool?) -> ())?
+    var onCardOptionSelected: ((_  isSaveCard: Bool?, _ isInstallmentsMode: Bool) -> ())?
     
     @discardableResult
     public class func present(with configuration: TipTopPayConfiguration, from: UIViewController, completion: (() -> ())?) -> PaymentForm {
@@ -86,11 +89,12 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         setupPanGesture()
         setupAlertView()
        
-        isOnActionPay(configuration: configuration)
+        getMerchantConfiguration(configuration: configuration)
         paymentLabel.textColor = .mainText
         
         paymentLabel.text = "ttpsdk_text_options_title".localized
         payWithCardButton.setTitle("ttpsdk_text_options_card".localized, for: .normal)
+        payWithInstallmentsButton.setTitle("ttpsdk_text_card_pay_button_installments".localized, for: .normal)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -120,32 +124,58 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         constraint.isActive = true
     }
     
-    private func isOnActionPay(configuration: TipTopPayConfiguration) {
+    private func getMerchantConfiguration(configuration: TipTopPayConfiguration) {
         let terminalPublicId = configuration.publicId
         
         guard let apiUrl = configuration.apiUrl else {
             return
         }
         
-        guard let status = GatewayRequest.payButtonStatus else {
-            loaderView.startAnimated("ttp_update_loader".localized)
-
-            GatewayRequest.getTerminalConfiguration(baseURL: apiUrl, terminalPublicId: terminalPublicId) { [weak self] status in
-                guard let self = self, let status = status else {
-                    self?.showAlert(title: .noData, message: .noConnection) {
-                        self?.presentesionView(false) {
-                            self?.dismiss(animated: false)
-                        }
-                    }
-                    return
-                }
-                self.resultPayButtons(status)
-            }
+        if let status = GatewayRequest.payButtonStatus {
+            showPayButtons(status, delay: false)
             return
         }
-        resultPayButtons(status, delay: false)
+
+        loaderView.startAnimated("ttp_update_loader".localized)
+        
+        GatewayRequest.getTerminalConfiguration(baseURL: apiUrl, terminalPublicId: terminalPublicId) { [weak self] response, error in
+            guard let self = self else { return }
+            
+            if let _ = error {
+                self.showAlert(title: nil, message: .noCorrectData) {
+                    self.presentesionView(false) {
+                        self.dismiss(animated: false)
+                    }
+                }
+                return
+            }
+            
+            guard let response = response else {
+                self.showAlert(title: nil, message: .noCorrectData) {
+                    self.presentesionView(false) {
+                        self.dismiss(animated: false)
+                    }
+                }
+                return
+            }
+            
+            if let isCvvRequired = response.isCvvRequired {
+                configuration.paymentData.isCvvRequired = isCvvRequired
+            }
+            
+            self.showPayButtons(response, delay: true)
+            
+            if response.isOnInstallments {
+                TipTopPayApi.getInstallmentsCalculateSumByPeriod(with: configuration) { [weak self] response in
+                    guard let _ = self else { return }
+                    
+                    if let installmentsConfiguration = response?.model?.configuration {
+                        configuration.paymentData.installmentConfigurations = installmentsConfiguration
+                    }
+                }
+            }
+        }
     }
-    
     
     @objc private func updateButtons(_  observer: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: ObserverKeys.networkConnectStatus.key, object: nil)
@@ -163,19 +193,23 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         } completion: { _ in
             self.loaderView.isHidden = false
             self.loaderView.alpha = 1
-            self.isOnActionPay(configuration: self.configuration)
+            self.getMerchantConfiguration(configuration: self.configuration)
             
         }
     }
     
-    private func resultPayButtons(_  status: PayButtonStatus, delay: Bool = true) {
-        view.layoutIfNeeded()
-        view.layoutMarginsDidChange()
-        let deadline: DispatchTime = delay ? (.now() + 3) : .now()
+    private func showPayButtons(_  status: PayButtonStatus, delay: Bool = true) {
+        
+        if status.isOnInstallments {
+            payWithInstallmentsButton.isHidden = false
+            mainInstallmentsView.isHidden = false
+        }
         
         self.setupCheckbox(status.isSaveCard)
         view.layoutIfNeeded()
         view.layoutMarginsDidChange()
+        
+        let deadline: DispatchTime = delay ? (.now() + 2) : .now()
         
         DispatchQueue.main.asyncAfter(deadline: deadline) {
             self.loaderView(isOn: false) {
@@ -192,7 +226,8 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     
     // MARK: - Private methods
     private func setButtonsAndContainersEnabled(isEnabled: Bool, select: UIButton! = nil) {
-        let views: [UIView?] = [payWithCardButton, applePayContainer]
+        
+        let views: [UIView?] = [payWithCardButton, applePayContainer, payWithInstallmentsButton]
 
         views.forEach {
             guard let view = $0, select != view else { return }
@@ -488,7 +523,20 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         let isSave = self.footer.isSelectedSave
         presentesionView(false) {
             self.dismiss(animated: false) {
-                self.onCardOptionSelected?(isSave)
+                self.onCardOptionSelected?(isSave, false)
+            }
+        }
+    }
+    
+    @IBAction private func openInstallmentsForm(_ sender: UIButton) {
+        openInstallmentsForm()
+    }
+    
+    private func openInstallmentsForm() {
+        let isSave = self.footer.isSelectedSave
+        presentesionView(false) {
+            self.dismiss(animated: false) {
+                self.onCardOptionSelected?(isSave, true)
             }
         }
     }
@@ -556,7 +604,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
         
         if let cryptogram = payment.convertToString() {
-            if (configuration.useDualMessagePayment) {
+            if configuration.isUseDualMessagePayment {
                 self.auth(cardCryptogramPacket: cryptogram, email: nil) { [weak self] status, canceled, transaction, errorMessage in
                     guard let self = self else {
                         return
@@ -578,7 +626,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                     }
                 }
             } else {
-                self.charge(cardCryptogramPacket: cryptogram, email: nil) { [weak self] status, canceled, transaction, errorMessage in
+                self.charge(cardCryptogramPacket: cryptogram, email: nil, term: nil) { [weak self] status, canceled, transaction, errorMessage in
                     guard let self = self else {
                         return
                     }
@@ -762,3 +810,5 @@ private extension PaymentOptionsForm {
         }
     }
 }
+
+

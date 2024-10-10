@@ -5,6 +5,14 @@
   Created by TipTopPay on 28.08.2024.
   Copyright © 2024 TipTopPay. All rights reserved.
 */
+
+"ttpsdk_error_word" = "Error";
+"ttpsdk_error_no_data" = "no hay conexión con el servidor";
+"ttpsdk_error_creating_crypto" = "Error al crear un paquete criptográfico";
+"ttpsdk_error_information" = "Información";
+"ttpsdk_error_check_internet" = "Compruebe su conexión a Internet";
+"ttpsdk_error_outdated" = "los Datos podrían estar desactualizados";
+"ttpsdk_error_сorrect_data" = "Compruebe que los datos son correctos";
 "ttp_sdk_three_ds_label" = "Será redirigido a la página de confirmación 3DS de su banco. Favor de tener su celular a la mano";
 "ttp_sdk_three_ds_popup" = "3DS es una tecnología que garantiza la seguridad de su pago. Es posible que tenga que introducir un código que recibira por parte de su Banco via SMS o aprobar la transacción directamente en la app móvil de su banco";
 "ttp_sdk_error_word" = "Error";
@@ -33,6 +41,11 @@
 "ttpsdk_text_card_hint_exp_error" = "Error en la fecha";
 "ttpsdk_text_card_hint_cvv_error" = "Error en CVV";
 "ttpsdk_text_card_pay_button" = "Pay";
+"ttpsdk_text_card_pay_button_full_installments" = "Paga en total ahora";
+"ttpsdk_text_card_pay_term_installments" = "Meses sin intereses";
+"ttpsdk_text_card_pay_button_installments" = "Pagar en meses sin intereses";
+"ttpsdk_text_card_select_installments_label" = "Selecciana los meses sin intereses";
+"ttpsdk_text_card_error_installments_label" = "Tu tarjeta no aplica para meses sin intereses";
 "ttpsdk_text_process_title" = "Procesando el pago";
 "ttpsdk_text_process_title_success" = "Pago realizado";
 "ttpsdk_text_process_button_success" = "Volver a la tienda";

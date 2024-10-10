@@ -71,8 +71,11 @@ struct ExternalPaymentMethod: Codable {
 // MARK: - Features
 struct Features: Codable {
     let isSaveCard: Int
+    let isAllowedNotSanctionedCards, isQiwi: Bool
 
     enum CodingKeys: String, CodingKey {
         case isSaveCard = "IsSaveCard"
+        case isAllowedNotSanctionedCards = "IsAllowedNotSanctionedCards"
+        case isQiwi = "IsQiwi"
     }
 }

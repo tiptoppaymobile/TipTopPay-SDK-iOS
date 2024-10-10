@@ -9,18 +9,30 @@
 import Foundation
 import UIKit
 
-public enum CardType: String {
+public enum CardType: String, CaseIterable {
     case unknown = "Unknown"
     case visa = "Visa"
     case masterCard = "MasterCard"
     case maestro = "Maestro"
     case mir = "MIR"
     case jcb = "JCB"
+    case jcb15 = "Jcb15"
     case americanExpress = "AmericanExpress"
     case troy = "Troy"
+    case dankort = "Dankort"
+    case discover = "Discover"
+    case diners = "Diners"
+    case instapayments = "Instapayments"
+    case humo = "Humo"
+    case uatp = "Uatp"
+    case unionPay = "UnionPay"
+    case uzcard = "Uzcard"
     
     public func toString() -> String {
-        return self.rawValue
+        switch self {
+        case .jcb, .jcb15: return CardType.jcb.rawValue
+        default: return self.rawValue
+        }
     }
     
     public func getIcon() -> UIImage? {
@@ -36,10 +48,28 @@ public enum CardType: String {
             iconName = "ic_mir"
         case .jcb:
             iconName = "ic_jcb"
+        case .jcb15:
+            iconName = "ic_jcb"
         case .americanExpress:
             iconName = "ic_american_express"
         case .troy:
             iconName = "ic_troy"
+        case .dankort:
+            iconName = "ic_dankort"
+        case .discover:
+            iconName = "ic_discover"
+        case .diners:
+            iconName = "ic_diners"
+        case .instapayments:
+            iconName = "ic_instapayment"
+        case .humo:
+            iconName = "ic_humo"
+        case .uatp:
+            iconName = "ic_uatp"
+        case .unionPay:
+            iconName = "ic_unionPay"
+        case .uzcard:
+            iconName = "ic_uzcard"
         default:
             iconName = nil
         }
@@ -49,6 +79,43 @@ public enum CardType: String {
         }
         
         return UIImage.named(iconName!)
+    }
+    
+    public func regexPattern() -> String {
+        switch self {
+        case .visa:
+            return "^4\\d{0,15}"
+        case .masterCard:
+            return "^(5[1-5]\\d{0,2}|22[2-9]\\d{0,1}|2[3-7]\\d{0,2})\\d{0,12}"
+        case .maestro:
+            return "^(?:5[0678]\\d{0,2}|6304|67\\d{0,2})\\d{0,12}"
+        case .mir:
+            return "^220[0-4]\\d{0,12}"
+        case .jcb:
+            return "^(?:35\\d{0,2})\\d{0,12}"
+        case .jcb15:
+            return "^(?:2131|1800)\\d{0,11}"
+        case .americanExpress:
+            return "^347\\d{0,13}"
+        case .dankort:
+            return "^(5019|4175|4571)\\d{0,12}"
+        case .discover:
+            return "^(?:6011|65\\d{0,2}|64[4-9]\\d?)\\d{0,12}"
+        case .diners:
+            return "^3(?:0([0-5]|9)|[689]\\d?)\\d{0,11}"
+        case .instapayments:
+            return "^63[7-9]\\d{0,13}"
+        case .humo:
+            return "(^(9860)\\d{0,12})|(^(55553660)\\d{0,8})"
+        case .uatp:
+            return "^(?!1800)1\\d{0,14}"
+        case .unionPay:
+            return "^(62|81)\\d{0,14}"
+        case .uzcard:
+            return "^(8600)\\d{0,12}"
+        default:
+            return ""
+        }
     }
 }
 
@@ -161,60 +228,13 @@ public struct Card {
             return .unknown
         }
         
-        let first = String(cleanCardNumber.first!)
-        
-        guard first != "4" else {
-            return .visa
-        }
-        
-        guard first != "6" else {
-            return .maestro
-        }
-        
-        guard cleanCardNumber.count >= 2 else {
-            return .unknown
-        }
-        
-        let indexTwo = cleanCardNumber.index(cleanCardNumber.startIndex, offsetBy: 2)
-        let firstTwo = String(cleanCardNumber[..<indexTwo])
-        let firstTwoNum = Int(firstTwo) ?? 0
-        
-        if firstTwoNum == 35 {
-            return .jcb
-        } else if firstTwoNum == 34 || firstTwoNum == 37 {
-            return .americanExpress
-        } else if firstTwoNum == 50 || (firstTwoNum >= 56 && firstTwoNum <= 69) {
-            return .maestro
-        } else if (firstTwoNum >= 51 && firstTwoNum <= 55) {
-            return .masterCard
-        }
-        
-        guard cleanCardNumber.count >= 4 else {
-            return .unknown
-        }
-        
-        let indexFour = cleanCardNumber.index(cleanCardNumber.startIndex, offsetBy: 4)
-        let firstFour = String(cleanCardNumber[..<indexFour])
-        let firstFourNum = Int(firstFour) ?? 0
-        
-        if firstFourNum >= 2200 && firstFourNum <= 2204 {
-            return .mir
-        }
-        
-        if firstFourNum >= 2221 && firstFourNum <= 2720 {
-            return .masterCard
-        }
-        
-        guard cleanCardNumber.count >= 6 else {
-            return .unknown
-        }
-        
-        let indexSix = cleanCardNumber.index(cleanCardNumber.startIndex, offsetBy: 6)
-        let firstSix = String(cleanCardNumber[..<indexSix])
-        let firstSixNum = Int(firstSix) ?? 0
-
-        if firstSixNum >= 979200 && firstSixNum <= 979289 {
-            return .troy
+        for cardType in CardType.allCases {
+            if let regex = try? NSRegularExpression(pattern: cardType.regexPattern()) {
+                let range = NSRange(location: 0, length: cleanCardNumber.utf8.count)
+                if regex.firstMatch(in: cleanCardNumber, options: [], range: range) != nil {
+                    return cardType
+                }
+            }
         }
         
         return .unknown

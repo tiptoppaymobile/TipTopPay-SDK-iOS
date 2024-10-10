@@ -6,14 +6,14 @@ public class TipTopPayApi {
         case ttpForm = "TipTopPay SDK iOS (Default form)"
         case ownForm = "TipTopPay SDK iOS (Custom form)"
     }
-
+    
     private let defaultCardHolderName = "TipTopPay SDK"
     private let threeDsSuccessURL = "https://tiptoppay.kz/success"
     private let threeDsFailURL = "https://tiptoppay.kz/fail"
     private let publicId: String
     private let apiUrl: String
     private let source: Source
-        
+    
     init(publicId: String, apiUrl: String?, source: Source, region: Region) {
         self.publicId = publicId
         self.source = source
@@ -45,13 +45,70 @@ public class TipTopPayApi {
         })
     }
     
+    public class func getInstallmentsCalculateSumByPeriod(with configuration: TipTopPayConfiguration, completion handler: @escaping (InstallmentConfigurationResponse?) -> Void) {
+        
+        let publicId = configuration.publicId
+        let amount = configuration.paymentData.amount
+        
+        guard let apiUrl = configuration.apiUrl else { return }
+        
+        let queryItems = [
+            "TerminalPublicId": publicId,
+            "Amount" :  amount,
+        ] as [String : String?]
+        
+        let request = InstallmentsRequest(queryItems: queryItems, apiUrl: apiUrl)
+        
+        request.execute { result in
+            handler(result)
+        } onError: { error in
+            print(error.localizedDescription)
+            handler(nil)
+        }
+        
+    }
+    
+    public class func getBinInfo(cleanCardNumber: String,
+                                 with configuration: TipTopPayConfiguration,
+                                 completion: @escaping (BankInfo?, Bool?) -> Void) {
+    
+        var firstSixDigits: String? = nil
+        
+        if cleanCardNumber.count >= 6 {
+            let firstSixIndex = cleanCardNumber.index(cleanCardNumber.startIndex, offsetBy: 6)
+            firstSixDigits = String(cleanCardNumber[..<firstSixIndex])
+        }
+        
+        let publicId = configuration.publicId
+    
+        let queryItems = [
+            "Bin": firstSixDigits,
+            "Currency": configuration.paymentData.currency,
+            "Amount": configuration.paymentData.amount,
+            "TerminalPublicId": publicId,
+            "IsCheckCard": "true"
+        ] as [String: String?]
+                
+        guard let apiUrl = configuration.apiUrl else { return }
+        
+        let request = BinInfoRequest(queryItems: queryItems, apiUrl: apiUrl)
+        
+        request.execute { result in
+            completion(result.model, result.success)
+        } onError: { error in
+            print(error)
+            completion(nil, false)
+        }
+    }
+    
     public func charge(cardCryptogramPacket: String,
                        email: String?,
                        paymentData: TipTopPayData,
+                       term: Int?,
                        completion: @escaping TipTopPayRequestCompletion<TransactionResponse>) {
         let parameters = generateParams(cardCryptogramPacket: cardCryptogramPacket,
                                         email: email,
-                                        paymentData: paymentData)
+                                        paymentData: paymentData, term: term, installmentData: InstallmentsData(term: term ?? 0))
         ChargeRequest(params: patch(params: parameters), headers: getDefaultHeaders(), apiUrl: apiUrl).execute(keyDecodingStrategy: .convertToUpperCamelCase, onSuccess: { response in
             completion(response, nil)
         }, onError: { error in
@@ -65,7 +122,7 @@ public class TipTopPayApi {
                      completion: @escaping TipTopPayRequestCompletion<TransactionResponse>) {
         let parameters = generateParams(cardCryptogramPacket: cardCryptogramPacket,
                                         email: email,
-                                        paymentData: paymentData)
+                                        paymentData: paymentData, term: nil, installmentData: nil)
         AuthRequest(params: patch(params: parameters), headers: getDefaultHeaders(), apiUrl: apiUrl).execute(keyDecodingStrategy: .convertToUpperCamelCase, onSuccess: {
             response in
             completion(response, nil) 
@@ -130,7 +187,9 @@ public class TipTopPayApi {
     
     private func generateParams(cardCryptogramPacket: String,
                                 email: String?,
-                                paymentData: TipTopPayData) -> [String: Any] {
+                                paymentData: TipTopPayData,
+                                term: Int?,
+                                installmentData: InstallmentsData?) -> [String: Any] {
         
         var parameters: [String: Any] = [
             "Amount" : paymentData.amount, // Сумма платежа (Обязательный)
@@ -146,6 +205,14 @@ public class TipTopPayApi {
             "scenario" : 7
         ]
         
+        if let term = term {
+            parameters["Term"] = term
+        }
+        
+        if let installmentData = installmentData {
+            parameters["InstallmentData"] = ["Term": installmentData.term]
+        }
+
         if let saveCard = paymentData.saveCard {
             parameters["SaveCard"] = saveCard
         }

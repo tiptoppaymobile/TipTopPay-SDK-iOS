@@ -13,6 +13,8 @@ enum TipTopPayHTTPResource: String {
     case charge = "payments/cards/charge"
     case auth = "payments/cards/auth"
     case post3ds = "payments/ThreeDSCallback"
+    case installmentsCalculateSumByPeriod = "installments/calculate/sum-by-period"
+    case binInfo = "bins/info"
     
     func asUrl(apiUrl: String) -> String {
         return apiUrl.appending(self.rawValue)

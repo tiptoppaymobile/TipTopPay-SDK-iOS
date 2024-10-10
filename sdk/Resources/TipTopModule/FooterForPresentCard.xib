@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FooterForPresentCard" customModule="TipTopPaySDK" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FooterForPresentCard" customModule="sdk" customModuleProvider="target">
             <connections>
                 <outlet property="attentionImage" destination="mMl-kx-Hih" id="RAd-ZO-FnB"/>
                 <outlet property="attentionView" destination="zjh-Im-Hyc" id="zQj-TO-fgK"/>
@@ -48,7 +48,7 @@
                                         <color key="titleColor" name="color_progress_text"/>
                                     </state>
                                 </button>
-                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UQD-kY-gsw">
+                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="UQD-kY-gsw">
                                     <rect key="frame" x="32" y="0.0" width="24" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="24" id="9p7-SQ-lah"/>
@@ -69,12 +69,12 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQs-cj-3a9">
-                            <rect key="frame" x="0.0" y="262" width="488" height="31"/>
+                            <rect key="frame" x="0.0" y="261" width="488" height="32"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Kzz-tC-Jp9">
-                                    <rect key="frame" x="0.0" y="0.0" width="30" height="31"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="30" height="32"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="31" id="X2B-l3-4m4"/>
+                                        <constraint firstAttribute="height" constant="32" id="X2B-l3-4m4"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="tintColor" name="color_text_button"/>
@@ -205,7 +205,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="26U-nN-ckf">
-                                    <rect key="frame" x="3" y="0.0" width="20" height="24"/>
+                                    <rect key="frame" x="4" y="0.0" width="20" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="24" id="Qjw-5r-YZS"/>
                                         <constraint firstAttribute="width" constant="20" id="bU4-6u-Z1d"/>
@@ -217,11 +217,11 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="TGB-Fq-62T" firstAttribute="leading" secondItem="LEn-xi-VzK" secondAttribute="leading" id="2ZX-cP-R7w"/>
-                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="26U-nN-ckf" secondAttribute="trailing" id="Fft-tB-dBW"/>
+                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="26U-nN-ckf" secondAttribute="trailing" constant="1" id="Fft-tB-dBW"/>
                                 <constraint firstAttribute="bottom" secondItem="TGB-Fq-62T" secondAttribute="bottom" id="KeP-DU-ONd"/>
                                 <constraint firstItem="26U-nN-ckf" firstAttribute="centerY" secondItem="LEn-xi-VzK" secondAttribute="centerY" id="Po6-Ol-flL"/>
                                 <constraint firstItem="26U-nN-ckf" firstAttribute="top" secondItem="LEn-xi-VzK" secondAttribute="top" id="TdT-Vd-ZxJ"/>
-                                <constraint firstItem="26U-nN-ckf" firstAttribute="leading" secondItem="TGB-Fq-62T" secondAttribute="trailing" constant="3" id="UQn-8c-9rr"/>
+                                <constraint firstItem="26U-nN-ckf" firstAttribute="leading" secondItem="TGB-Fq-62T" secondAttribute="trailing" constant="4" id="UQn-8c-9rr"/>
                                 <constraint firstItem="TGB-Fq-62T" firstAttribute="top" secondItem="LEn-xi-VzK" secondAttribute="top" id="d6q-2X-DHX"/>
                             </constraints>
                         </view>

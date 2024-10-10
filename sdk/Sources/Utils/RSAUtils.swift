@@ -8,6 +8,7 @@
 
 import Security
 import Foundation
+import CommonCrypto
 
 class RSAUtils {
     private static let PADDING_FOR_DECRYPT = SecPadding()
@@ -52,6 +53,19 @@ class RSAUtils {
             String(kSecAttrApplicationTag): tagName as AnyObject
         ]
         SecItemDelete(queryFilter as CFDictionary)
+    }
+    
+    // SHA-512
+    public static func sha512HashString(input: String) -> String {
+        if let data = input.data(using: .utf8) {
+            var digest = [UInt8](repeating: 0, count: Int(CC_SHA512_DIGEST_LENGTH))
+            data.withUnsafeBytes {
+                _ = CC_SHA512($0.baseAddress, CC_LONG(data.count), &digest)
+            }
+            let hash = digest.map { String(format: "%02hhx", $0) }.joined()
+            return hash
+        }
+        return ""
     }
 
     /**

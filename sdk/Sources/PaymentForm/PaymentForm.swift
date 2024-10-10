@@ -46,9 +46,10 @@ public class PaymentForm: BaseViewController {
 
         if PKPaymentAuthorizationViewController.canMakePayments() {
             let controller = PaymentOptionsForm.present(with: configuration, from: from, completion: completion) as! PaymentOptionsForm
-            controller.onCardOptionSelected = { isSaveCard in
+            controller.onCardOptionSelected = { isSaveCard, isInstallmentsMode in
                 
-                 configuration.paymentData.saveCard = isSaveCard
+                configuration.paymentData.saveCard = isSaveCard
+                configuration.paymentData.isInstallmentsMode = isInstallmentsMode
                 
                 self.showCardForm(with: configuration, from: from, completion: nil)
             }
@@ -64,8 +65,8 @@ public class PaymentForm: BaseViewController {
     private class func showCardForm(with configuration: TipTopPayConfiguration, from: UIViewController, completion: (() -> ())?) -> PaymentForm {
         let controller = PaymentCardForm.present(with: configuration, from: from, completion: completion) as! PaymentCardForm
         
-        controller.onPayClicked = { cryptogram, email in
-            PaymentProcessForm.present(with: configuration, cryptogram: cryptogram, email: email, from: from, completion: nil)
+        controller.onPayClicked = { cryptogram, email, selectedTerm in
+            PaymentProcessForm.present(with: configuration, cryptogram: cryptogram, email: email, from: from, term: selectedTerm, completion: nil)
         }
         return controller
     }
@@ -117,10 +118,10 @@ public class PaymentForm: BaseViewController {
     }
     
     // MARK: - One stage payment
-    internal func charge(cardCryptogramPacket: String, email: String?, completion: PaymentCallback?) {
+    internal func charge(cardCryptogramPacket: String, email: String?, term: Int?, completion: PaymentCallback?) {
         network.charge(cardCryptogramPacket: cardCryptogramPacket,
                        email: email,
-                       paymentData: self.configuration.paymentData) { [weak self] response, error in
+                       paymentData: self.configuration.paymentData, term: term) { [weak self] response, error in
             if let response = response {
                 self?.checkTransactionResponse(transactionResponse: response, completion: completion)
             } else if let error = error {

@@ -22,13 +22,16 @@ public class TipTopPayConfiguration {
     let paymentUIDelegate: TipTopPayUIDelegateImpl
     let scanner: PaymentCardScanner?
     let requireEmail: Bool
-    let useDualMessagePayment: Bool
+    private let useDualMessagePayment: Bool
     let disableApplePay: Bool
     var apiUrl: String?
     let region: Region
-
+    var isUseDualMessagePayment: Bool {
+        return region == .MX ? false : useDualMessagePayment
+    }
+    
     public init(region: Region, publicId: String, paymentData: TipTopPayData, delegate: TipTopPayDelegate?, uiDelegate: TipTopPayUIDelegate?, scanner: PaymentCardScanner?,
-                requireEmail: Bool = false, useDualMessagePayment: Bool = false, disableApplePay: Bool = false, apiUrl: String?, customListBanks: Bool = false) {
+                requireEmail: Bool = false, useDualMessagePayment: Bool = false, disableApplePay: Bool = false, apiUrl: String? = nil) {
         self.publicId = publicId
         self.paymentData = paymentData
         self.paymentDelegate = TipTopPayDelegateImpl.init(delegate: delegate)

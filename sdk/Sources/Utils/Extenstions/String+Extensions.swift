@@ -16,6 +16,7 @@ extension String {
     static let informationWord = "ttpsdk_error_information".localized
     static let noConnection = "ttpsdk_error_check_internet".localized
     static let infoOutdated = "ttpsdk_error_outdated".localized
+    static let noCorrectData = "ttpsdk_error_сorrect_data".localized
     static let RUBLE_SIGN = "\u{20BD}"
     static let EURO_SIGN = "\u{20AC}"
     static let GBP_SIGN = "\u{00A3}"

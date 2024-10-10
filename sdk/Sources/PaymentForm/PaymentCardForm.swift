@@ -12,6 +12,16 @@ public class PaymentCardForm: PaymentForm {
     
     // MARK: - Private properties
     
+    private var arrayChoseData: [String] = ["One", "Two", "Three"]
+    private lazy var chevronSelectChoseView: ChevronSelectChoseView = .init(frame: view.bounds, style: .plain)
+    private var isOpenTableView = false
+    
+    @IBOutlet weak var interestFreeMonthsLabel: UILabel!
+    @IBOutlet weak var errorInstallmentsLabel: UILabel!
+    @IBOutlet weak var selectInstallmentsLabel: UILabel!
+    @IBOutlet weak var intallmentsStackView: UIStackView!
+    @IBOutlet weak var errorInstallmentsView: UIView!
+    @IBOutlet weak var chooseStackView: UIStackView!
     @IBOutlet private weak var cardNumberTextField: TextField!
     @IBOutlet private weak var cardExpDateTextField: TextField!
     @IBOutlet private weak var cardCvvTextField: TextField!
@@ -39,11 +49,13 @@ public class PaymentCardForm: PaymentForm {
     private let alertInfoView = AlertInfoView(title: "ttp_sdk_three_ds_popup".localized)
     private var constraint: NSLayoutConstraint!
     lazy var defaultHeight: CGFloat = self.mainCardStackView.frame.height
-    let dismissibleHigh: CGFloat = 500
     let maximumContainerHeight: CGFloat = UIScreen.main.bounds.height - 64
     lazy var currentContainerHeight: CGFloat = mainCardStackView.frame.height
+    var cardNumberTimer: Timer?
     
-    var onPayClicked: ((_ cryptogram: String, _ email: String?) -> ())?
+    var onPayClicked: ((_ cryptogram: String, _ email: String?, _ term: Int? ) -> ())?
+    
+    private var selectedTerm: Int = 0
     
     @discardableResult
     public class func present(with configuration: TipTopPayConfiguration, from: UIViewController, completion: (() -> ())?) -> PaymentForm? {
@@ -93,42 +105,24 @@ public class PaymentCardForm: PaymentForm {
     }
     
     public override func viewDidLoad() {
+        
         super.viewDidLoad()
         alertInfoView.isHidden = true
         setupEyeButton()
         setupPanGesture()
         containerHeightConstraint?.constant = mainCardStackView.frame.height
         paymentAttentionLabel.text = "ttp_sdk_three_ds_label".localized
+        cardNumberTextField.delegate = self
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(addAction(_:)))
+        chooseStackView.addGestureRecognizer(tap)
+        
+        chooseStackView.layer.cornerRadius = 10
+        chooseStackView.layer.borderWidth = 2
+        chooseStackView.layer.borderColor = UIColor(red: 226/255.0, green: 232/255.0, blue: 239/255.0, alpha: 1).cgColor
         
         if configuration.region == .MX {
             threeDsView.isHidden = false
-        }
-        
-        let paymentData = self.configuration.paymentData
-        
-        let payTitle = "ttpsdk_text_card_pay_button".localized
-        
-        self.payButton.setTitle("\(payTitle) \(paymentData.amount) \(Currency.getCurrencySign(code: paymentData.currency))", for: .normal)
-        
-        self.payButton.onAction = { [weak self] in
-            guard let self = self else {
-                return
-            }
-            
-            guard self.isValid(), let cryptogram = Card.makeCardCryptogramPacket(self.cardNumberTextField.text!, expDate: self.cardExpDateTextField.cardExpText!, cvv: self.cardCvvTextField.text!, merchantPublicID: self.configuration.publicId)
-            else {
-                self.showAlert(title: .errorWord, message: String.errorCreatingCryptoPacket)
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self.dismiss(animated: true) { [weak self] in
-                    guard let self = self else {
-                        return
-                    }
-                    self.onPayClicked?(cryptogram, paymentData.email)
-                }
-            }
         }
         
         if configuration.scanner == nil {
@@ -157,7 +151,6 @@ public class PaymentCardForm: PaymentForm {
         setButtonsAndContainersEnabled(isEnabled: false)
         paymentCardLabel.textColor = .mainText
         cardLabel.text = "ttpsdk_text_card_hint_number".localized
-        paymentCardLabel.text = "ttpsdk_text_card_title".localized
         
         cardNumberTextField.textColor = .mainText
         cardExpDateTextField.textColor = .mainText
@@ -168,9 +161,87 @@ public class PaymentCardForm: PaymentForm {
         expDatePlaceholder.text = "ttpsdk_text_card_hint_exp".localized
         cvvPlaceholder.textColor = .colorProgressText
         cvvPlaceholder.text = "ttpsdk_text_card_hint_cvv".localized
+        selectInstallmentsLabel.text = "ttpsdk_text_card_select_installments_label".localized
+        errorInstallmentsLabel.text = "ttpsdk_text_card_error_installments_label".localized
+        interestFreeMonthsLabel.text = "ttpsdk_text_card_pay_term_installments".localized
         
         setupAlertView()
         infoButton.addTarget(self, action: #selector(infoButtonAction(_:)), for: .touchUpInside)
+        
+        chevronSelectChoseView.myDelegate = self
+        view.addSubview(chevronSelectChoseView)
+        chevronSelectChoseView.isHidden = true
+    }
+    
+    private func paymentCardMethod() {
+        
+        if !configuration.paymentData.isInstallmentsMode {
+            
+            errorInstallmentsView.isHidden = true
+            
+            let paymentData = configuration.paymentData
+            
+            let payTitle = "ttpsdk_text_card_pay_button".localized
+            paymentCardLabel.text = "ttpsdk_text_card_title".localized
+            
+            self.payButton.setTitle("\(payTitle) \(paymentData.amount) \(Currency.getCurrencySign(code: paymentData.currency))", for: .normal)
+            
+            self.payButton.onAction = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                
+                guard self.isValid(), let cryptogram = Card.makeCardCryptogramPacket(self.cardNumberTextField.text!, expDate: self.cardExpDateTextField.cardExpText!, cvv: self.cardCvvTextField.text!, merchantPublicID: self.configuration.publicId)
+                else {
+                    self.showAlert(title: .errorWord, message: .errorCreatingCryptoPacket)
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) { [weak self] in
+                        guard let self = self else {
+                            return
+                        }
+                        self.onPayClicked?(cryptogram, paymentData.email, nil)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func paymentInstallmentsMethod() {
+        
+        if configuration.paymentData.isInstallmentsMode {
+            intallmentsStackView.isHidden = false
+            
+            payButton.backgroundColor = UIColor(red: 23/255.0, green: 88/255.0, blue: 146/255.0, alpha: 1)
+            
+            let payTitle = "ttpsdk_text_card_pay_button_installments".localized
+            paymentCardLabel.text = "\(configuration.paymentData.amount) \(configuration.paymentData.currency)"
+            self.payButton.setTitle("\(payTitle)", for: .normal)
+            
+            self.payButton.onAction = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                
+                guard self.isValid(), let cryptogram = Card.makeCardCryptogramPacket(self.cardNumberTextField.text!, expDate: self.cardExpDateTextField.cardExpText!, cvv: self.cardCvvTextField.text!, merchantPublicID: self.configuration.publicId)
+                else {
+                    self.showAlert(title: .errorWord, message: .errorCreatingCryptoPacket)
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) { [weak self] in
+                        guard let self = self else {
+                            return
+                        }
+                        
+                        self.onPayClicked?(cryptogram, self.configuration.paymentData.email, self.selectedTerm)
+                    }
+                }
+            }
+        }
     }
     
     private func setupAlertView() {
@@ -187,38 +258,47 @@ public class PaymentCardForm: PaymentForm {
         constraint.isActive = true
     }
     
-    private var animator: UIViewPropertyAnimator?
-
     func setupPanGesture() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handlePanGesture(gesture:)))
         panGesture.delaysTouchesBegan = false
         panGesture.delaysTouchesEnded = false
         containerView.addGestureRecognizer(panGesture)
     }
-
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if configuration.paymentData.isInstallmentsMode {
+            paymentInstallmentsMethod()
+        } else {
+            paymentCardMethod()
+        }
+    }
+    
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         containerHeightConstraint?.constant = -defaultHeight
         presentThreeDsAttentionView(isOn: true)
     }
-
+    
     private func presentThreeDsAttentionView(isOn: Bool) {
         UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseInOut, animations: {
             self.isActiveTopConstraint?.isActive = !isOn
             self.view.layoutIfNeeded()
         })
     }
-
+    
     // MARK: Pan gesture handler
-
+    
     @objc func handlePanGesture(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
         let isDraggingDown = translation.y > 0
-
+        
         guard isDraggingDown else { return }
-
+        
         let newHeight = currentContainerHeight - translation.y
-
+        let percent = 15.0
+        let newContainerHeight = currentContainerHeight - ((currentContainerHeight * percent) / 100)
+        
         switch gesture.state {
         case .changed:
             if newHeight > defaultHeight && newHeight < maximumContainerHeight {
@@ -226,7 +306,7 @@ public class PaymentCardForm: PaymentForm {
                 view.layoutIfNeeded()
             }
         case .ended:
-            if newHeight < dismissibleHigh {
+            if newHeight < newContainerHeight {
                 UIView.animate(withDuration: 0.9, animations: {
                     self.animateDismissView()
                 }) { _ in
@@ -250,15 +330,15 @@ public class PaymentCardForm: PaymentForm {
             break
         }
     }
-
+    
     func animateContainerHeight(_ height: CGFloat) {
         self.containerHeightConstraint?.constant = -height
         self.view.layoutIfNeeded()
         currentContainerHeight = height
     }
-
+    
     func animateDismissView() {
-        self.containerHeightConstraint?.constant = -self.view.bounds.height
+        self.containerHeightConstraint?.constant = view.bounds.height
         self.view.layoutIfNeeded()
     }
     
@@ -297,11 +377,16 @@ public class PaymentCardForm: PaymentForm {
         let cardExpIsValid = Card.isExpDateValid(self.cardExpDateTextField.cardExpText?.formattedCardExp())
         let cardCvvIsValid = Card.isCvvValid(self.cardNumberTextField.text?.formattedCardNumber(), self.cardCvvTextField.text?.formattedCardCVV())
         
-        self.validateAndErrorCardNumber()
-        self.validateAndErrorCardExp()
-        self.validateAndErrorCardCVV()
+        let isInstallmentAllowed = self.errorInstallmentsView.isHidden
         
-        return cardNumberIsValid && cardExpIsValid && cardCvvIsValid
+        if !isInstallmentAllowed {
+            return false
+        }
+        
+        let isFullPaymentSelected = selectedTerm == 0
+        let termIsValid = isFullPaymentSelected || (selectedTerm > 0)
+        
+        return cardNumberIsValid && cardExpIsValid && cardCvvIsValid && termIsValid
     }
     
     private func validateAndErrorCardNumber(){
@@ -358,8 +443,8 @@ public class PaymentCardForm: PaymentForm {
     
 }
 
-
 //MARK: - Delegates for TextField
+
 extension PaymentCardForm {
     
     private var isHiddenCvv: Bool {
@@ -609,4 +694,179 @@ extension PaymentCardForm {
             if !preview { self.alertInfoView.isHidden = true }
         }
     }
+}
+
+extension PaymentCardForm: UITextFieldDelegate {
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if let currentText = textField.text, let range = Range(range, in: currentText) {
+            let newCardNumber = currentText.replacingCharacters(in: range, with: string)
+            let cleanCard = Card.cleanCreditCardNo(newCardNumber)
+            if cleanCard.count < 6 {
+                cvvView.isHidden = isHiddenCvv
+                errorInstallmentsView.isHidden = true
+                return true
+            }
+        }
+        
+        cardNumberTimer?.invalidate()
+        cardNumberTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.sendRequest), userInfo: nil, repeats: false)
+        
+        return true
+    }
+    
+    @objc private func sendRequest() {
+        cardNumberTimer?.invalidate()
+        
+        if let cardNumber = cardNumberTextField.text, cardNumber.count >= 6 {
+            let cleanCardNumber = Card.cleanCreditCardNo(cardNumber)
+            
+            TipTopPayApi.getBinInfo(cleanCardNumber: cleanCardNumber, with: configuration) { [weak self] model, success in
+                guard let self = self else { return }
+                guard let isCardAllowed = model?.isCardAllowed else { return }
+                
+                let hideCvvInput = model?.hideCvvInput ?? false
+                self.cvvView.isHidden = hideCvvInput
+                
+                DispatchQueue.main.async {
+                    
+                    if self.configuration.paymentData.isInstallmentsMode {
+                        self.errorInstallmentsView.isHidden = isCardAllowed
+                    } else {
+                        self.errorInstallmentsView.isHidden = true
+                        
+                    }
+                    
+                    if !isCardAllowed {
+                        self.selectedTerm = 0
+                        
+                    }
+                    
+                    self.updatePayButtonState()
+                }
+            }
+        }
+    }
+}
+
+extension PaymentCardForm: ChevronSelectChoseViewDelegate {
+    
+    func numberOfRow(_ choseView: ChevronSelectChoseView) -> Int {
+        let count = configuration.paymentData.installmentConfigurations.count + 1
+        return count
+    }
+    
+    func choseView(_ choseView: ChevronSelectChoseView, row: Int) -> String {
+        if row == 0 {
+            let payFullNow = "ttpsdk_text_card_pay_button_full_installments".localized
+            return "\(configuration.paymentData.amount) \(configuration.paymentData.currency) \(payFullNow)"
+        }
+        let installment = configuration.paymentData.installmentConfigurations[row - 1]
+        if let term = installment.term, let monthlyPayment = installment.monthlyPayment {
+            let interestFreeMonth = "ttpsdk_text_card_pay_term_installments".localized
+            return "\(monthlyPayment) \(configuration.paymentData.currency) x \(term) \(interestFreeMonth)"
+        }
+        return ""
+    }
+    
+    func choseView(_ choseView: ChevronSelectChoseView, didSelect row: Int) {
+        if row == 0 {
+            selectedTerm = 0
+            let payFullNow = "ttpsdk_text_card_pay_button_full_installments".localized
+            interestFreeMonthsLabel.text = "\(configuration.paymentData.amount) \(configuration.paymentData.currency) \(payFullNow)"
+        } else {
+            let installment = configuration.paymentData.installmentConfigurations[row - 1]
+            if let term = installment.term, let monthlyPayment = installment.monthlyPayment {
+                selectedTerm = term
+                let interestFreeMonth = "ttpsdk_text_card_pay_term_installments".localized
+                interestFreeMonthsLabel.text = "\(monthlyPayment) \(configuration.paymentData.currency) x \(term) \(interestFreeMonth)"
+            }
+        }
+        
+        updatePayButtonState()
+        isOpenTableView = false
+        chevronSelectChoseView.isHidden = true
+    }
+    
+    @objc private func addAction(_ sender: UITapGestureRecognizer) {
+        isOpenTableView.toggle()
+        chevronSelectChoseView.isHidden = !isOpenTableView
+        setupPositionChoseView()
+        
+        if isOpenTableView {
+            setupPositionChoseView()
+            chevronSelectChoseView.reloadData()
+        }
+    }
+    
+    private func setupPositionChoseView() {
+        let position = chooseStackView.convert(chooseStackView.bounds, to: view)
+        let x = position.minX
+        let y = position.maxY
+        
+        let rowHeight: CGFloat = 44.0
+        let totalRows = configuration.paymentData.installmentConfigurations.count + 1
+        let totalHeight = rowHeight * CGFloat(totalRows)
+        
+        let maxHeight: CGFloat = rowHeight * 5
+        let height = min(totalHeight, maxHeight)
+        
+        chevronSelectChoseView.frame = CGRect(x: x, y: y, width: position.width, height: height)
+        chevronSelectChoseView.isScrollEnabled = totalHeight > maxHeight
+        view.bringSubviewToFront(chevronSelectChoseView)
+    }
+}
+protocol ChevronSelectChoseViewDelegate: AnyObject {
+    func numberOfRow(_ choseView: ChevronSelectChoseView) -> Int
+    func choseView(_ choseView: ChevronSelectChoseView, row: Int) -> String
+    func choseView(_ choseView: ChevronSelectChoseView, didSelect row: Int)
+}
+
+final class ChevronSelectChoseView: UITableView, UITableViewDelegate, UITableViewDataSource {
+    
+    weak var myDelegate: ChevronSelectChoseViewDelegate?
+    
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
+        dataSource = self
+        delegate = self
+        
+        register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.shadowOpacity = 0.2
+        layer.shadowRadius = 4
+        layer.masksToBounds = true
+        clipsToBounds = false
+        layer.cornerRadius = 8
+        layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        backgroundColor = .white
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return myDelegate?.numberOfRow(self) ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let string = myDelegate?.choseView(self, row: indexPath.row)
+        cell.textLabel?.text = string
+        
+        cell.backgroundColor = .clear
+        cell.contentView.backgroundColor = .clear
+        
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        myDelegate?.choseView(self, didSelect: indexPath.row)
+    }
+    
 }

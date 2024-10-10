@@ -6,6 +6,13 @@
   Copyright © 2024 TipTopPay. All rights reserved.
 */
 
+"ttpsdk_error_word" ="Error";
+"ttpsdk_error_no_data" = "There is no connection to the server";
+"ttpsdk_error_creating_crypto" = "Error when creating a cryptographic package";
+"ttpsdk_error_information" ="Information";
+"ttpsdk_error_check_internet" = "Check your Internet connection";
+"ttpsdk_error_outdated" = "Data may be outdated";
+"ttpsdk_error_сorrect_data" = "Check the correctness of the data";
 "ttp_sdk_three_ds_label" = "You will be redirected to your bank's 3DS confirmation page. Please keep your phone nearby";
 "ttp_sdk_three_ds_popup" = "3DS is a technology that guarantees the security of your payment. You may have to enter a code that you will receive from your bank via SMS or approve the transaction directly on your bank's mobile app";
 "ttp_sdk_error_word" = "Error";
@@ -34,6 +41,11 @@
 "ttpsdk_text_card_hint_exp" = "MM / YY";
 "ttpsdk_text_card_hint_cvv" = "CVV";
 "ttpsdk_text_card_pay_button" = "Pay";
+"ttpsdk_text_card_pay_button_full_installments" = "Pay in full now";
+"ttpsdk_text_card_pay_term_installments" = "Interest-free months";
+"ttpsdk_text_card_pay_button_installments" = "Pay monthly interest-free";
+"ttpsdk_text_card_select_installments_label" = "Select the number of interest-free months";
+"ttpsdk_text_card_error_installments_label" = "This card is not eligible for the interest-free monthly payment option";
 "ttpsdk_text_process_title" = "Payment is being processed";
 "ttpsdk_text_process_title_success" = "Payment completed";
 "ttpsdk_text_process_button_success" = "Return to the store";
