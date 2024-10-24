@@ -31,6 +31,16 @@
 "ttpsdk_text_options_email_title" = "E-mail";
 "ttpsdk_text_options_email_title_2" = "E-mail for the receipt";
 "ttpsdk_text_options_email_error" = "Incorrect E-mail";
+"ttpsdk_text_cash_title_barcode" = "Save the barcode! It will open in a separate tab.";
+"ttpsdk_text_cash_title_pay_with" = "Pay with";
+"ttpsdk_text_cash_title_name" = "Name";
+"ttpsdk_text_cash_title_email" = "Email";
+"ttpsdk_text_cash_available_title" = "Not available now, please use another method";
+"ttpsdk_cash_method_oxxo" = "OXXO";
+"ttpsdk_cash_method_pharmacy" = "Pharmacy Stores";
+"ttpsdk_cash_method_convenience_store" = "Convenience Store";
+"ttpsdk_cash_method_stores_label" = "Stores";
+"ttpsdk_text_options_min_cash_amount_error" = "Cash payments available for orders higher over 300.00 MXN";
 "ttpsdk_text_options_save_card_popup_1" = "Safely store your card information for future purchases, so you don’t have to enter it again.";
 "ttpsdk_text_options_save_card_popup_2" = "At the same time, we will not be able to carry out any transactions on your card without your consent.";
 "ttpsdk_text_card_title" = "Pay by card";
@@ -49,7 +59,7 @@
 "ttpsdk_text_process_title" = "Payment is being processed";
 "ttpsdk_text_process_title_success" = "Payment completed";
 "ttpsdk_text_process_button_success" = "Return to the store";
-"ttpsdk_text_process_title_error" = "";
+"ttpsdk_text_process_title_error" = "The operation was rejected";
 "ttpsdk_text_process_button_error" = "Try again";
 "ttpsdk_text_process_button_ok" = "OK";
 "ttpsdk_currency_template" = "%.2f\u20BD";
@@ -116,3 +126,6 @@
 "ttpsdk_error_5206_extra" = "Please, try again";
 "ttpsdk_error_5207_extra" = "If the error continues, please try with another card or another payment method";
 "ttpsdk_error_5300_extra" = "If the error persists, please contact the page administrator";
+"ttpsdk_error_" = "Couldn't get a response";
+"ttpsdk_error_1" = "The operation cannot be processed";
+"ttpsdk_error_2" = "Contact your bank or use another card";

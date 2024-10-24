@@ -17,6 +17,10 @@ extension UIColor {
         }
     }
     
+    public class var cashFormTextFieldColor: UIColor {
+        return color(named: "cash_form_text_field_color")
+    }
+    
     public class var mainText: UIColor {
         return color(named: "color_text_main")
     }

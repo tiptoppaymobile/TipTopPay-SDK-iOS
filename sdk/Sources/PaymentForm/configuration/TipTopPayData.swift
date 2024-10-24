@@ -9,7 +9,7 @@
 import Foundation
 
 public struct TipTopPayDataPayer: Codable {
-    let firstName: String
+    var firstName: String
     let lastName: String
     let middleName: String
     let birth: String
@@ -55,7 +55,7 @@ public struct TipTopPayDataPayer: Codable {
 }
 
 public class TipTopPayData {
-    private (set) var payer: TipTopPayDataPayer?
+    var payer: TipTopPayDataPayer?
     private (set) var currency: String
     private (set) var applePayMerchantId: String?
     private (set) var cardholderName: String?
@@ -72,6 +72,7 @@ public class TipTopPayData {
     var isCvvRequired: Bool?
     var installmentConfigurations: [Configuration] = []
     var isInstallmentsMode: Bool = false
+    var cashMethods: [Int]? = []
     
     public init(currency: String, amount: String) {
         self.currency = currency
@@ -157,5 +158,3 @@ public class TipTopPayData {
         return nil
     }
 }
-
-

@@ -4,14 +4,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "CloudPayments",
+    name: "TipTopPay",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "CloudPaymentsSDK",
+            name: "TipTopPaySDK",
             targets: ["sdk"]),
         .library(
-            name: "CloudPaymentsNetworking",
+            name: "TipTopPayNetworking",
             targets: ["networking"]),
     ],
     dependencies: [

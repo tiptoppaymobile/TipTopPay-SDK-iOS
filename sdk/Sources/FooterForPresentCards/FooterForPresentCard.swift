@@ -284,7 +284,6 @@ final class AlertInfoView: UIView {
         let view = UIView()
         view.addSubview(label)
         
-        
         let triangleView = UIView()
         triangleView.backgroundColor = .colorAlertView
         let transform = CGAffineTransform(rotationAngle: .pi / 1 / 4)
@@ -315,7 +314,6 @@ final class AlertInfoView: UIView {
         triangleConstraint.isActive = true
     }
 }
-
 
 struct TipTopPayModel: Codable {
     let tiptoppay: TipTopPay?

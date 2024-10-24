@@ -628,7 +628,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uCs-AP-siD">
                                                 <rect key="frame" x="0.0" y="444.66666666666663" width="313" height="68"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gHW-ix-nkJ" customClass="Button" customModule="Cloudpayments">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gHW-ix-nkJ" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
                                                         <rect key="frame" x="20" y="12" width="273" height="56"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="56" id="eEs-5l-dzs"/>
@@ -867,9 +867,6 @@
                                                                                 <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
-                                                                        <connections>
-                                                                            <action selector="onCard:" destination="1Yz-Du-ae4" eventType="touchUpInside" id="MsC-NU-6g1"/>
-                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -916,6 +913,62 @@
                                                                     <constraint firstAttribute="bottom" secondItem="6oP-Bd-BQn" secondAttribute="bottom" id="SsG-QI-PQ4"/>
                                                                     <constraint firstItem="6oP-Bd-BQn" firstAttribute="top" secondItem="4Ri-Gg-9fp" secondAttribute="top" id="f61-8p-Xvf"/>
                                                                     <constraint firstAttribute="trailing" secondItem="6oP-Bd-BQn" secondAttribute="trailing" id="l8x-p0-5nS"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GVD-Tj-WMm">
+                                                                <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
+                                                                <subviews>
+                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzY-nT-7Sa" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="56" id="9JI-fg-fIx"/>
+                                                                        </constraints>
+                                                                        <state key="normal" title="Button"/>
+                                                                        <buttonConfiguration key="configuration" style="plain"/>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                                <real key="value" value="1"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                                <real key="value" value="8"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                                <color key="value" name="color_blue"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                        <connections>
+                                                                            <action selector="openCashForm:" destination="1Yz-Du-ae4" eventType="touchUpInside" id="DlQ-AE-zLM"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                <constraints>
+                                                                    <constraint firstItem="GzY-nT-7Sa" firstAttribute="bottom" secondItem="GVD-Tj-WMm" secondAttribute="bottom" id="4yA-Tb-g8D"/>
+                                                                    <constraint firstItem="GzY-nT-7Sa" firstAttribute="top" secondItem="GVD-Tj-WMm" secondAttribute="top" id="BbW-I0-bG3"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="GzY-nT-7Sa" secondAttribute="bottom" id="CSv-j6-gTy"/>
+                                                                    <constraint firstItem="GzY-nT-7Sa" firstAttribute="leading" secondItem="GVD-Tj-WMm" secondAttribute="leading" id="dJ8-Vx-TPb"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="GzY-nT-7Sa" secondAttribute="trailing" id="jLy-Uq-ZCI"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FM7-zh-JM8">
+                                                                <rect key="frame" x="0.0" y="0.0" width="361" height="50"/>
+                                                                <subviews>
+                                                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSp-C1-5gO">
+                                                                        <rect key="frame" x="20" y="0.0" width="321" height="50"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="i9v-1i-PXV"/>
+                                                                        </constraints>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="bottom" secondItem="lSp-C1-5gO" secondAttribute="bottom" id="6P3-EU-NPr"/>
+                                                                    <constraint firstItem="lSp-C1-5gO" firstAttribute="top" secondItem="FM7-zh-JM8" secondAttribute="top" id="Xc5-C8-OSb"/>
+                                                                    <constraint firstItem="lSp-C1-5gO" firstAttribute="leading" secondItem="FM7-zh-JM8" secondAttribute="leading" constant="20" id="nt3-4P-phi"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="lSp-C1-5gO" secondAttribute="trailing" constant="20" id="sc1-4W-hy2"/>
                                                                 </constraints>
                                                             </view>
                                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vpt-9r-s2q" userLabel="Main apple view">
@@ -1012,12 +1065,15 @@
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="applePayContainer" destination="RiV-wQ-EWL" id="1mR-tq-Tdd"/>
+                        <outlet property="cashPaymentsLabel" destination="lSp-C1-5gO" id="lRI-BC-rpI"/>
+                        <outlet property="cashPaymentsLabelView" destination="FM7-zh-JM8" id="lzb-4w-Lzu"/>
                         <outlet property="containerView" destination="HGh-3C-ngX" id="W5k-7a-Ygj"/>
                         <outlet property="footer" destination="wyU-2h-F6Y" id="21k-wc-1GL"/>
                         <outlet property="heightConstraint" destination="5bA-qa-4zz" id="Iqo-Zi-Js0"/>
                         <outlet property="mainAppleView" destination="vpt-9r-s2q" id="9w5-31-JYg"/>
                         <outlet property="mainInstallmentsView" destination="4Ri-Gg-9fp" id="idE-ah-Z4d"/>
                         <outlet property="payWithCardButton" destination="Ds8-4r-6Pa" id="DN2-cU-CVW"/>
+                        <outlet property="payWithCash" destination="GzY-nT-7Sa" id="9Ty-H4-Kz7"/>
                         <outlet property="payWithInstallmentsButton" destination="6oP-Bd-BQn" id="BqY-D9-4IF"/>
                         <outlet property="paymentLabel" destination="8Gs-ry-pVK" id="lby-Af-LQQ"/>
                     </connections>

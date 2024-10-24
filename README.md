@@ -114,6 +114,12 @@ extension CartViewController: CardIOPaymentViewControllerDelegate {
 
 ### Update history:
 
+#### 1.0.7
+* Cash payment method
+
+#### 1.0.6
+* Installments payment method
+
 #### 1.0.5
 * Added region
 

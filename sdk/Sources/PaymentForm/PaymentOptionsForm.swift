@@ -18,7 +18,9 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     @IBOutlet private weak var paymentLabel: UILabel!
     @IBOutlet private weak var mainInstallmentsView: View!
     @IBOutlet private weak var payWithInstallmentsButton: Button!
-    
+    @IBOutlet private weak var payWithCash: Button!
+    @IBOutlet private weak var cashPaymentsLabelView: UIView!
+    @IBOutlet private weak var cashPaymentsLabel: UILabel!
     private let alertInfoView = AlertInfoView()
     
     private var emailTextField: TextField {
@@ -51,7 +53,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     private var applePaymentSucceeded: Bool?
     private var resultTransaction: Transaction?
     private var errorMessage: String?
-
+    
     private lazy var currentContainerHeight: CGFloat = containerView.bounds.height
     private var heightPresentView: CGFloat { return containerView.bounds.height }
     
@@ -62,7 +64,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         let storyboard = UIStoryboard.init(name: "PaymentForm", bundle: Bundle.mainSdk)
         
         let controller = storyboard.instantiateViewController(withIdentifier: "PaymentOptionsForm") as! PaymentOptionsForm
-    
+        
         controller.configuration = configuration
         controller.open(inViewController: from, completion: completion)
         
@@ -88,13 +90,16 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         setupEmailPlaceholder()
         setupPanGesture()
         setupAlertView()
-       
+        
         getMerchantConfiguration(configuration: configuration)
         paymentLabel.textColor = .mainText
         
         paymentLabel.text = "ttpsdk_text_options_title".localized
         payWithCardButton.setTitle("ttpsdk_text_options_card".localized, for: .normal)
         payWithInstallmentsButton.setTitle("ttpsdk_text_card_pay_button_installments".localized, for: .normal)
+        
+        payWithCardButton.addTarget(self, action: #selector(onCard(_:)), for: .touchUpInside)
+        configurePayWithCashButton()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -108,6 +113,55 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         if !footer.saveCardButtonView {
             self.configuration.paymentData.saveCard = footer.isSelectedSave
         }
+    }
+    
+    func configurePayWithCashButton() {
+        let button = payWithCash
+
+        let oxxoAttachment = NSTextAttachment()
+        oxxoAttachment.image = UIImage.ic_oxxo
+        oxxoAttachment.bounds = CGRect(x: 0, y: -5, width: 58, height: 27)
+        let oxxoAttributedString = NSAttributedString(attachment: oxxoAttachment)
+
+        let sevenElevenAttachment = NSTextAttachment()
+        sevenElevenAttachment.image = UIImage.ic_seven_eleven
+        sevenElevenAttachment.bounds = CGRect(x: 0, y: -5, width: 21, height: 27)
+        let sevenElevenAttributedString = NSAttributedString(attachment: sevenElevenAttachment)
+
+        let walmartAttachment = NSTextAttachment()
+        walmartAttachment.image = UIImage.ic_wallmart
+        walmartAttachment.bounds = CGRect(x: 0, y: -5, width: 26, height: 27)
+        let walmartAttributedString = NSAttributedString(attachment: walmartAttachment)
+
+        let pharmaAttachment = NSTextAttachment()
+        pharmaAttachment.image = UIImage.ic_seven_eleven_pharma
+        pharmaAttachment.bounds = CGRect(x: 0, y: -5, width: 26, height: 27)
+        let pharmaAttributedString = NSAttributedString(attachment: pharmaAttachment)
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        let plusTen = "+10"
+        let storesLabel = "ttpsdk_cash_method_stores_label".localized
+
+        let textAttributedString = NSAttributedString(string: " \(plusTen) \(storesLabel)", attributes: [
+            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
+            .foregroundColor: UIColor.mainBlue.cgColor,
+            .paragraphStyle: paragraphStyle
+        ])
+
+        let fullAttributedString = NSMutableAttributedString()
+        fullAttributedString.append(oxxoAttributedString)
+        fullAttributedString.append(NSAttributedString(string: "   ")) //3 spaces 12-single indentation
+        fullAttributedString.append(sevenElevenAttributedString)
+        fullAttributedString.append(NSAttributedString(string: "   "))
+        fullAttributedString.append(walmartAttributedString)
+        fullAttributedString.append(NSAttributedString(string: "   "))
+        fullAttributedString.append(pharmaAttributedString)
+        fullAttributedString.append(NSAttributedString(string: "   "))
+        fullAttributedString.append(textAttributedString)
+
+        button?.setAttributedTitle(fullAttributedString, for: .normal)
     }
     
     private func setupAlertView() {
@@ -135,11 +189,13 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             showPayButtons(status, delay: false)
             return
         }
-
+        
         loaderView.startAnimated("ttp_update_loader".localized)
         
         GatewayRequest.getTerminalConfiguration(baseURL: apiUrl, terminalPublicId: terminalPublicId) { [weak self] response, error in
-            guard let self = self else { return }
+            guard let self = self else {
+                return
+            }
             
             if let _ = error {
                 self.showAlert(title: nil, message: .noCorrectData) {
@@ -163,12 +219,31 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                 configuration.paymentData.isCvvRequired = isCvvRequired
             }
             
+            if response.isOnCash {
+                configuration.paymentData.cashMethods = response.cashMethods
+                
+                guard let minAmount = response.minAmount else { return }
+                let minCashAmountTitle = "ttpsdk_text_options_min_cash_amount_error".localized
+                
+                let currentAmount = Int(configuration.paymentData.amount) ?? 0
+                
+                if currentAmount < minAmount {
+                    payWithCash.isUserInteractionEnabled = false
+                    payWithCash.alpha = 0.3
+                    cashPaymentsLabelView.isHidden = false
+                    cashPaymentsLabel.isHidden = false
+                    cashPaymentsLabel.text = "\(minCashAmountTitle)."
+                } else {
+                    payWithCash.isUserInteractionEnabled = true
+                    payWithCash.alpha = 1.0
+                }
+            }
+            
             self.showPayButtons(response, delay: true)
             
             if response.isOnInstallments {
                 TipTopPayApi.getInstallmentsCalculateSumByPeriod(with: configuration) { [weak self] response in
                     guard let _ = self else { return }
-                    
                     if let installmentsConfiguration = response?.model?.configuration {
                         configuration.paymentData.installmentConfigurations = installmentsConfiguration
                     }
@@ -205,6 +280,11 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             mainInstallmentsView.isHidden = false
         }
         
+        if status.isOnCash {
+            payWithCash.isHidden = false
+            payWithCash.superview?.isHidden = false
+        }
+        
         self.setupCheckbox(status.isSaveCard)
         view.layoutIfNeeded()
         view.layoutMarginsDidChange()
@@ -225,21 +305,33 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     }
     
     // MARK: - Private methods
-    private func setButtonsAndContainersEnabled(isEnabled: Bool, select: UIButton! = nil) {
-        
+    private func setButtonsAndContainersEnabled(isEnabled: Bool, select: UIButton? = nil) {
         let views: [UIView?] = [payWithCardButton, applePayContainer, payWithInstallmentsButton]
-
+        
         views.forEach {
             guard let view = $0, select != view else { return }
-            
             view.isUserInteractionEnabled = isEnabled
             view.alpha = isEnabled ? 1.0 : 0.3
+        }
+        
+        if select != payWithCash {
+            let isCashButtonEnabled = (Int(configuration.paymentData.amount) ?? 0) >= (GatewayRequest.payButtonStatus?.minAmount ?? 0) && isEnabled
+            payWithCash.isUserInteractionEnabled = isCashButtonEnabled
+            payWithCash.alpha = isCashButtonEnabled ? 1.0 : 0.3
         }
     }
     
     private func isEnabledView(isEnabled: Bool, select: UIButton) {
-        setButtonsAndContainersEnabled(isEnabled: isEnabled, select: select)
-
+        let views: [UIView?] = [payWithCardButton, applePayContainer, payWithInstallmentsButton]
+        
+        views.forEach {
+            $0?.isUserInteractionEnabled = isEnabled
+            $0?.alpha = isEnabled ? 1.0 : 0.3
+        }
+        
+        payWithCash.isUserInteractionEnabled = isEnabled
+        payWithCash.alpha = isEnabled ? 1.0 : 0.3
+        
         footer.subviews.forEach {
             $0.isUserInteractionEnabled = isEnabled
             $0.alpha = isEnabled ? 1.0 : 0.3
@@ -249,6 +341,9 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             $0.isUserInteractionEnabled = isEnabled
             $0.alpha = isEnabled ? 1.0 : 0.3
         }
+        
+        cashPaymentsLabelView.isHidden = isEnabled
+        cashPaymentsLabel.isHidden = isEnabled
     }
     
     private func resetEmailView(isReceiptSelected: Bool, isEmailViewHidden: Bool, isEmailTextFieldHidden: Bool) {
@@ -280,11 +375,11 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             sender.titleEdgeInsets = .init(top: 0, left: 10, bottom: 0, right: 10)
         }
     }
-
+    
     private func setupButton() {
         emailTextField.text = configuration.paymentData.email?.trimmingCharacters(in: .whitespaces)
         isReceiptButtonEnabled(configuration.requireEmail)
-
+        
         if configuration.requireEmail {
             resetEmailView(isReceiptSelected: false, isEmailViewHidden: false, isEmailTextFieldHidden: false)
             
@@ -301,7 +396,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         if configuration.requireEmail == false {
             resetEmailView(isReceiptSelected: true, isEmailViewHidden: true, isEmailTextFieldHidden: true)
             emailTextField.isUserInteractionEnabled = true
-
+            
             if emailTextField.text?.emailIsValid() == false {
                 showErrorStateForEmail(with: "ttpsdk_text_options_email_error".localized , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
                 self.setButtonsAndContainersEnabled(isEnabled: false)
@@ -357,22 +452,22 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     
     @objc private func receiptButtonAction(_ sender: UIButton) {
         sender.isSelected.toggle()
-
+        
         if sender.isSelected {
             self.configuration.paymentData.email = self.emailTextField.text
         } else {
             self.configuration.paymentData.email = nil
         }
-
+        
         let isEmailValid = self.emailTextField.text?.emailIsValid() ?? false
         if sender.isSelected && isEmailValid == false {
             self.emailTextField.becomeFirstResponder()
-
+            
             self.normalEmailState()
-
+            
         } else {
             self.setButtonsAndContainersEnabled(isEnabled: true)
-
+            
         }
         
         self.footer.emailView.isHidden.toggle()
@@ -458,7 +553,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             self.view.layoutIfNeeded()
         }
     }
-
+    
     @objc override func onKeyboardWillHide(_ notification: Notification) {
         super.onKeyboardWillHide(notification)
         isOnKeyboard = false
@@ -515,8 +610,22 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         PKPassLibrary().openPaymentSetup()
     }
     
-    @IBAction private func onCard(_ sender: UIButton) {
+    @objc private func onCard(_ sender: UIButton) {
         openCardForm()
+    }
+    
+    @IBAction private func openCashForm(_ sender: UIButton) {
+        openСashForm()
+    }
+    
+    private func openСashForm() {
+        guard let controller = self.presentingViewController else { return }
+        
+        presentesionView(false) {
+            self.dismiss(animated: false) {
+                PaymentCashFormViewController.present(with: self.configuration, from: controller)
+            }
+        }
     }
     
     private func openCardForm() {
@@ -585,7 +694,8 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                 if status {
                     state = .succeeded(self.resultTransaction)
                 } else {
-                    state = .failed(self.errorMessage)
+                    let errorMessage = ApiError.getErrorDescription(code: errorMessage ?? "5204")
+                    state = .failed(errorMessage)
                 }
                 
                 let parent = self.presentingViewController
@@ -605,7 +715,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         
         if let cryptogram = payment.convertToString() {
             if configuration.isUseDualMessagePayment {
-                self.auth(cardCryptogramPacket: cryptogram, email: nil) { [weak self] status, canceled, transaction, errorMessage in
+                self.auth(cardCryptogramPacket: cryptogram, email: configuration.paymentData.email) { [weak self] status, canceled, transaction, errorMessage in
                     guard let self = self else {
                         return
                     }
@@ -626,7 +736,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                     }
                 }
             } else {
-                self.charge(cardCryptogramPacket: cryptogram, email: nil, term: nil) { [weak self] status, canceled, transaction, errorMessage in
+                self.charge(cardCryptogramPacket: cryptogram, email: configuration.paymentData.email, term: nil) { [weak self] status, canceled, transaction, errorMessage in
                     guard let self = self else {
                         return
                     }
@@ -654,29 +764,62 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
 }
 
 extension PaymentOptionsForm: UITextFieldDelegate {
-
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    
+    private func updateEmailVisualState(emailIsValid: Bool, isEditing: Bool = false) {
+        if isEditing {
+            configureEmailFieldToDefault(borderView: .mainBlue, textColor: .mainText, placeholderColor: .border)
+            emailPlaceholder.text = configuration.requireEmail ? "ttpsdk_text_options_email_title_2".localized : "ttpsdk_text_options_email_title".localized
+        } else if emailIsValid {
+            configureEmailFieldToDefault(borderView: .mainBlue, textColor: .mainText, placeholderColor: .border)
+            emailPlaceholder.text = configuration.requireEmail ? "ttpsdk_text_options_email_title_2".localized : "ttpsdk_text_options_email_title".localized
+        } else {
+            showErrorStateForEmail(
+                with: "ttpsdk_text_options_email_error".localized,
+                borderView: .errorBorder,
+                textColor: .errorBorder,
+                placeholderColor: .errorBorder
+            )
+        }
+    }
+    
+    private func updateButtonStatesBasedOnForm() {
+        let emailIsValid = isValid(email: configuration.paymentData.email)
+        guard let minAmount = GatewayRequest.payButtonStatus?.minAmount else {
+            setButtonsAndContainersEnabled(isEnabled: false)
+            return
+        }
         
+        let currentAmount = Int(configuration.paymentData.amount) ?? 0
+        let amountIsValid = currentAmount >= minAmount
+        let shouldEnableOtherButtons = emailIsValid
+        
+        setButtonsAndContainersEnabled(isEnabled: shouldEnableOtherButtons)
+        
+        if !amountIsValid {
+            payWithCash.isUserInteractionEnabled = false
+            payWithCash.alpha = 0.3
+            cashPaymentsLabelView.isHidden = false
+            cashPaymentsLabel.isHidden = false
+            cashPaymentsLabel.text = String(format: "ttpsdk_text_options_min_cash_amount_error".localized, minAmount, configuration.paymentData.currency)
+        } else {
+            payWithCash.isUserInteractionEnabled = shouldEnableOtherButtons
+            payWithCash.alpha = shouldEnableOtherButtons ? 1.0 : 0.3
+            cashPaymentsLabelView.isHidden = true
+        }
+        
+        updateEmailVisualState(emailIsValid: emailIsValid)
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text,
            let textRange = Range(range, in: text) {
-            let updatedText = text.replacingCharacters(in: textRange,with: string)
+            let updatedText = text.replacingCharacters(in: textRange, with: string)
             
-            if isValid(email: updatedText) || updatedText.isEmpty {
-                self.setButtonsAndContainersEnabled(isEnabled: true)
-                configureEmailFieldToDefault(borderView: .mainBlue, textColor: .mainText, placeholderColor: .border)
-                setupEmailPlaceholder()
-                configuration.paymentData.email = updatedText
-                
-                if updatedText.isEmpty {
-                    footer.emailBorderColor = UIColor.mainBlue
-                    self.setButtonsAndContainersEnabled(isEnabled: false)
-                }
-                
-            }
-            else {
-                showErrorStateForEmail(with: "ttpsdk_text_options_email_error".localized , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
-                self.setButtonsAndContainersEnabled(isEnabled: false)
-            }
+            configuration.paymentData.email = updatedText
+            
+            let emailIsValid = isValid(email: updatedText)
+            updateEmailVisualState(emailIsValid: emailIsValid)
+            updateButtonStatesBasedOnForm()
         }
         return true
     }
@@ -686,11 +829,6 @@ extension PaymentOptionsForm: UITextFieldDelegate {
         emailTextField.textColor = textColor
         emailPlaceholder.textColor = placeholderColor
     }
-
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        configureEmailFieldToDefault(borderView: .mainBlue, textColor: .mainText, placeholderColor: .border)
-        setupEmailPlaceholder()
-    }
     
     func showErrorStateForEmail(with message: String, borderView: UIColor?, textColor: UIColor?, placeholderColor: UIColor?) {
         emailTextField.textColor = textColor
@@ -699,17 +837,14 @@ extension PaymentOptionsForm: UITextFieldDelegate {
         emailPlaceholder.text = message
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateEmailVisualState(emailIsValid: true, isEditing: true)
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
-        
-        let emailIsValid = emailTextField.text?.emailIsValid()
-        
-        if emailIsValid == false {
-            setButtonsAndContainersEnabled(isEnabled: false)
-            showErrorStateForEmail(with: "ttpsdk_text_options_email_error".localized , borderView: .errorBorder, textColor: .errorBorder, placeholderColor: .errorBorder)
-        } else {
-            footer.emailBorderColor = UIColor.border
-            setButtonsAndContainersEnabled(isEnabled: true)
-        }
+        let emailIsValid = isValid(email: configuration.paymentData.email)
+        updateEmailVisualState(emailIsValid: emailIsValid)
+        updateButtonStatesBasedOnForm()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -810,5 +945,3 @@ private extension PaymentOptionsForm {
         }
     }
 }
-
-

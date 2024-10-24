@@ -25,8 +25,8 @@ internal class TipTopPayDelegateImpl {
         self.delegate = delegate
     }
     
-    func paymentFinished(_ transaction: Transaction?){
-        self.delegate?.onPaymentFinished(transaction?.transactionId)
+    func paymentFinished(_ transaction: Int64?){
+        self.delegate?.onPaymentFinished(transaction)
     }
     
     func paymentFailed(_ errorMessage: String?) {

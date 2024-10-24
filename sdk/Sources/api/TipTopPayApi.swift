@@ -71,7 +71,7 @@ public class TipTopPayApi {
     public class func getBinInfo(cleanCardNumber: String,
                                  with configuration: TipTopPayConfiguration,
                                  completion: @escaping (BankInfo?, Bool?) -> Void) {
-    
+        
         var firstSixDigits: String? = nil
         
         if cleanCardNumber.count >= 6 {
@@ -80,7 +80,7 @@ public class TipTopPayApi {
         }
         
         let publicId = configuration.publicId
-    
+        
         let queryItems = [
             "Bin": firstSixDigits,
             "Currency": configuration.paymentData.currency,
@@ -88,7 +88,7 @@ public class TipTopPayApi {
             "TerminalPublicId": publicId,
             "IsCheckCard": "true"
         ] as [String: String?]
-                
+        
         guard let apiUrl = configuration.apiUrl else { return }
         
         let request = BinInfoRequest(queryItems: queryItems, apiUrl: apiUrl)
@@ -98,6 +98,64 @@ public class TipTopPayApi {
         } onError: { error in
             print(error)
             completion(nil, false)
+        }
+    }
+    
+    public class func altPayCash(
+        with configuration: TipTopPayConfiguration,
+        altPayType: String,
+        completion handler: @escaping (Result<AltPayCashResponse?, TipTopPayError>) -> Void
+    ) {
+        let publicId = configuration.publicId
+        let amount = configuration.paymentData.amount
+        let email = configuration.paymentData.email
+        let description = configuration.paymentData.description
+        let firstName = configuration.paymentData.payer?.firstName ?? ""
+        let currency = configuration.paymentData.currency
+        let accountId = configuration.paymentData.accountId
+        let invoiceId = configuration.paymentData.invoiceId
+        let sсheme: Scheme = configuration.isUseDualMessagePayment ? .auth : .charge
+        let jsonData = configuration.paymentData.jsonData
+        
+        guard let apiUrl = configuration.apiUrl else {
+            handler(.failure(.invalidURL(url: nil)))
+            return
+        }
+        
+        let payerParams = [
+            "FirstName": firstName,
+            "Email": email
+        ]
+        
+        let params: [String : Any?] = [
+            "PublicId": publicId,
+            "Amount" :  amount,
+            "AltPayType": altPayType,
+            "Payer": payerParams,
+            "Email": email,
+            "Description": description,
+            "Scenario": 7,
+            "Currency": currency,
+            "AccountId": accountId,
+            "InvoiceId": invoiceId,
+            "Scheme": sсheme.rawValue,
+            "CultureName": "es-US",
+            "JsonData" : jsonData
+        ]
+        
+        let request = AltPayCashRequest(params: params, apiUrl: apiUrl)
+        
+        request.execute { result in
+            if result.success ?? false {
+                handler(.success(result))
+            } else {
+                    let reasonCode = result.model?.reasonCode ?? 5204
+                    let errorMessage = ApiError.getFullErrorDescription(code: String(reasonCode))
+                    let error = TipTopPayError(message: errorMessage)
+                    handler(.failure(error))
+            }
+        } onError: { error in
+            handler(.failure(TipTopPayError(message: error.localizedDescription)))
         }
     }
     
@@ -125,7 +183,7 @@ public class TipTopPayApi {
                                         paymentData: paymentData, term: nil, installmentData: nil)
         AuthRequest(params: patch(params: parameters), headers: getDefaultHeaders(), apiUrl: apiUrl).execute(keyDecodingStrategy: .convertToUpperCamelCase, onSuccess: {
             response in
-            completion(response, nil) 
+            completion(response, nil)
             
         }, onError: { error in
             completion(nil, error)
@@ -142,7 +200,7 @@ public class TipTopPayApi {
                 "MD" : mdParamsStr,
                 "PaRes" : paRes
             ]
-
+            
             PostThreeDsRequest(params: parameters, headers: getDefaultHeaders(), apiUrl: apiUrl).execute(keyDecodingStrategy: .convertToUpperCamelCase, onSuccess: { r in
             }, onError: { error in
             }, onRedirect: { [weak self] request in
@@ -150,7 +208,7 @@ public class TipTopPayApi {
                     return true
                 }
                 
-            
+                
                 
                 if let url = request.url {
                     let items = url.absoluteString.split(separator: "&").filter { $0.contains("ReasonCode")}
@@ -158,7 +216,7 @@ public class TipTopPayApi {
                     if !items.isEmpty, let params = items.first?.split(separator: "="), params.count == 2 {
                         reasonCode = String(params[1]).removingPercentEncoding
                     }
-
+                    
                     if url.absoluteString.starts(with: self.threeDsSuccessURL) {
                         DispatchQueue.main.async {
                             let r = ThreeDsResponse.init(success: true, reasonCode: reasonCode)
@@ -212,14 +270,14 @@ public class TipTopPayApi {
         if let installmentData = installmentData {
             parameters["InstallmentData"] = ["Term": installmentData.term]
         }
-
+        
         if let saveCard = paymentData.saveCard {
             parameters["SaveCard"] = saveCard
         }
-
+        
         return parameters
     }
-
+    
     private func patch(params: [String: Any]) -> [String: Any] {
         var parameters = params
         parameters["PublicId"] = self.publicId
@@ -237,15 +295,15 @@ public typealias TipTopPayRequestCompletion<T> = (_ response: T?, _ error: Error
 
 private struct TipTopPayCodingKey: CodingKey {
     var stringValue: String
-
+    
     init(stringValue: String) {
         self.stringValue = stringValue
     }
-
+    
     var intValue: Int? {
         return nil
     }
-
+    
     init?(intValue: Int) {
         return nil
     }
@@ -264,4 +322,9 @@ extension JSONDecoder.KeyDecodingStrategy {
             return TipTopPayCodingKey(stringValue: modifiedKey)
         })
     }
+}
+
+enum Scheme: String, Codable {
+    case charge = "charge"
+    case auth = "auth"
 }

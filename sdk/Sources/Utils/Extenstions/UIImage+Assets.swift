@@ -41,6 +41,30 @@ extension UIImage {
     public class var icn_attention: UIImage {
         return self.named("icn_attention")
     }
+    
+    public class var ic_secured_by_ttp: UIImage {
+        return self.named("ic_secured_by_ttp")
+    }
+    
+    public class var ic_oxxo: UIImage {
+        return self.named("icn_oxxo")
+    }
+    
+    public class var ic_pharma: UIImage {
+        return self.named("icn_pharma")
+    }
+    
+    public class var ic_seven_eleven_pharma: UIImage {
+        return self.named("icn_seven_eleven_pharma")
+    }
+    
+    public class var ic_seven_eleven: UIImage {
+        return self.named("icn_seven_eleven")
+    }
+    
+    public class var ic_wallmart: UIImage {
+        return self.named("icn_wallmart")
+    }
 }
 
 extension UIImageView {

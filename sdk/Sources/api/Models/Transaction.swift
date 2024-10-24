@@ -42,6 +42,4 @@ public struct Transaction: Codable {
     public private(set) var threeDsCallbackId: String?
 }
 
-struct InstallmentsData {
-    let term: Int
-}
+

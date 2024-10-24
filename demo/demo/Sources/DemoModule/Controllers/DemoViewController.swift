@@ -89,7 +89,6 @@ class DemoViewController: BaseViewController {
               let jsonData = getText(.jsonData)
         else { return }
         
-        
         let payer = TipTopPayDataPayer(
             firstName: payerFirstName,
             lastName: payerLastName,

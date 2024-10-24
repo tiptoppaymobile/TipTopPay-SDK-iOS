@@ -50,35 +50,3 @@ enum NameCardType: String, Codable {
         }
     }
 }
-
-public struct InstallmentConfigurationResponse: Codable {
-    let model: InstallmentConfiguration?
-    let success: Bool?
-
-    enum CodingKeys: String, CodingKey {
-        case model = "Model"
-        case success = "Success"
-    }
-}
-
-// MARK: - Model
-struct InstallmentConfiguration: Codable {
-    let isCardInstallmentAvailable: Bool?
-    let configuration: [Configuration]?
-
-    enum CodingKeys: String, CodingKey {
-        case isCardInstallmentAvailable = "IsCardInstallmentAvailable"
-        case configuration = "Configuration"
-    }
-}
-
-// MARK: - Configuration
-struct Configuration: Codable {
-    let term: Int?
-    let monthlyPayment: Double?
-
-    enum CodingKeys: String, CodingKey {
-        case term = "Term"
-        case monthlyPayment = "MonthlyPayment"
-    }
-}

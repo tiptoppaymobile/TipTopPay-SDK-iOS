@@ -31,6 +31,16 @@
 "ttpsdk_text_options_email_require" = "Inserta tu correo electrónico";
 "ttpsdk_text_options_email_title_2" = "Correo electrónico para el recibo";
 "ttpsdk_text_options_email_title" = "E-mail";
+"ttpsdk_text_cash_title_barcode" = "¡Guarda el código de barras! Este se abrirá en una pagina independiente.";
+"ttpsdk_text_cash_title_pay_with" = "Paga en";
+"ttpsdk_text_cash_title_name" = "Nombre";
+"ttpsdk_text_cash_title_email" = "Correo electrónico";
+"ttpsdk_text_cash_available_title" = "No disponible por el momento, por favor utilice otro método de pago";
+"ttpsdk_cash_method_oxxo" = "OXXO";
+"ttpsdk_cash_method_pharmacy" = "Las tiendas de farmacia";
+"ttpsdk_cash_method_convenience_store" = "Tienda de conveniencia";
+"ttpsdk_cash_method_stores_label" = "Tiendas";
+"ttpsdk_text_options_min_cash_amount_error" = "Pago en efectivo, solo disponible en ordenes mayores a 300.00 MXN";
 "ttpsdk_text_options_save_card_popup_1" = "Guardar los datos de forma segura. No es necesario volver a ingresar para compras posteriores.";
 "ttpsdk_text_options_save_card_popup_2" = "Sin embargo, no podremos realizar ninguna transacción en su tarjeta sin su consentimiento.";
 "ttpsdk_text_card_title" = "Pagar con tarjeta";
@@ -49,7 +59,7 @@
 "ttpsdk_text_process_title" = "Procesando el pago";
 "ttpsdk_text_process_title_success" = "Pago realizado";
 "ttpsdk_text_process_button_success" = "Volver a la tienda";
-"ttpsdk_text_process_title_error" = "";
+"ttpsdk_text_process_title_error" = "Operación rechazada";
 "ttpsdk_text_process_button_error" = "Vuelve a intentar";
 "ttpsdk_text_process_button_ok" = "OK";
 "ttpsdk_currency_template" = "MXN";
@@ -117,3 +127,5 @@
 "ttpsdk_error_5206_extra" = "Por favor, vuelve a intentarlo más";
 "ttpsdk_error_5207_extra" = "Si el error continúa, por favor intenta con otra tarjeta o otro método de pago";
 "ttpsdk_error_5300_extra" = "Si el error continúa, por favor ponte en contacto con el administrador de la página";
+"ttpsdk_error_1" = "La operación no se puede manejar";
+"ttpsdk_error_2" = "Póngase en contacto con su banco o use otra tarjeta";

@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 
 public class PaymentProcessForm: PaymentForm {
+    
     public enum State {
         
         case inProgress
@@ -49,7 +50,9 @@ public class PaymentProcessForm: PaymentForm {
             }
         }
     }
-    // MARK: - Private properties 
+    
+    // MARK: - Private properties
+    
     @IBOutlet private weak var progressIcon: UIImageView!
     @IBOutlet private weak var messageLabel: UILabel!
     @IBOutlet private weak var actionButton: Button!
@@ -59,7 +62,7 @@ public class PaymentProcessForm: PaymentForm {
     @IBOutlet private weak var buttonView: View!
     @IBOutlet private weak var progressStackView: UIStackView!
     @IBOutlet private weak var selectPaymentButton: Button!
-
+    
     private var state: State = .inProgress
     private var cryptogram: String?
     private var email: String?
@@ -70,8 +73,8 @@ public class PaymentProcessForm: PaymentForm {
     @discardableResult
     public class func present(with configuration: TipTopPayConfiguration, cryptogram: String?, email: String?, state: State = .inProgress, from: UIViewController, isSaveCard: Bool? = nil, term: Int? = nil, completion: (() -> ())? = nil) -> PaymentForm? {
         let storyboard = UIStoryboard.init(name: "PaymentForm", bundle: Bundle.mainSdk)
-
-        let controller = storyboard.instantiateViewController(withIdentifier: "PaymentProcessForm") as! PaymentProcessForm        
+        
+        let controller = storyboard.instantiateViewController(withIdentifier: "PaymentProcessForm") as! PaymentProcessForm
         controller.configuration = configuration
         controller.cryptogram = cryptogram
         controller.email = email
@@ -134,15 +137,11 @@ public class PaymentProcessForm: PaymentForm {
         
         messageLabel.textColor = .mainText
         secondDescriptionLabel.textColor = .colorProgressText
-        messageLabel.text = "ttpsdk_text_process_title".localized
         selectPaymentButton.setTitle("ttpsdk_text_options_title".localized, for: .normal)
     }
     
-    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //self.startAnimation()
     }
     
     public override func viewDidDisappear(_ animated: Bool) {
@@ -155,7 +154,7 @@ public class PaymentProcessForm: PaymentForm {
         self.state = state
         self.stopAnimation()
         
-
+        
         switch state {
             
         case .inProgress:
@@ -187,7 +186,7 @@ public class PaymentProcessForm: PaymentForm {
         
         if case .succeeded(let transaction) = self.state {
             
-            self.configuration.paymentDelegate.paymentFinished(transaction)
+            self.configuration.paymentDelegate.paymentFinished(transaction?.transactionId)
             self.actionButton.onAction = { [weak self] in
                 self?.hide()
             }

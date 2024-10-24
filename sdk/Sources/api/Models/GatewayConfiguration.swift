@@ -57,6 +57,8 @@ struct ExternalPaymentMethod: Codable {
     let appleMerchantID: String?
     let allowedPaymentMethods: [String]?
     let shopID, showCaseID: String?
+    let cashMethods: [Int]?
+    let minAmount: Int?
 
     enum CodingKeys: String, CodingKey {
         case type = "Type"
@@ -65,6 +67,8 @@ struct ExternalPaymentMethod: Codable {
         case allowedPaymentMethods = "AllowedPaymentMethods"
         case shopID = "ShopId"
         case showCaseID = "ShowCaseId"
+        case cashMethods = "CashMethods"
+        case minAmount = "MinAmount"
     }
 }
 
