@@ -26,3 +26,22 @@ final class AltPayCashRequest: BaseRequest, TipTopPayRequestType {
         return TipTopPayRequest(path: fullPath, method: .post, params: params, headers: headers)
     }
 }
+
+final class StpSpeiPaymentDetailsRequest: BaseRequest, TipTopPayRequestType {
+    typealias ResponseType = StpSpeiPaymentDetailsResponse
+    var data: TipTopPayRequest {
+        let path = TipTopPayHTTPResource.stpSpeiPaymentDetails.asUrl(apiUrl: apiUrl)
+       
+        guard var component = URLComponents(string: path) else { return TipTopPayRequest(path: path, method: .post, params: params, headers: headers) }
+       
+        if !queryItems.isEmpty {
+            let items = queryItems.compactMap { return URLQueryItem(name: $0, value: $1) }
+            component.queryItems = items
+        }
+        
+        guard let url = component.url else { return TipTopPayRequest(path: path, method: .post, params: params, headers: headers) }
+        let fullPath = url.absoluteString
+        
+        return TipTopPayRequest(path: fullPath, method: .post, params: params, headers: headers)
+    }
+}

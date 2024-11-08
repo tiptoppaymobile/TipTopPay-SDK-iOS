@@ -64,7 +64,8 @@ public class TipTopPayData {
     private (set) var invoiceId: String?
     private (set) var cultureName: String?
     private (set) var jsonData: String?
-    
+
+    var terminalName: String?
     var amount: String
     var email: String?
     var saveCard: Bool?

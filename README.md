@@ -114,6 +114,9 @@ extension CartViewController: CardIOPaymentViewControllerDelegate {
 
 ### Update history:
 
+#### 1.0.8
+* Spei payment method
+
 #### 1.0.7
 * Cash payment method
 

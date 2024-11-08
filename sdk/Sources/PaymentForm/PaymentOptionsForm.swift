@@ -21,6 +21,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     @IBOutlet private weak var payWithCash: Button!
     @IBOutlet private weak var cashPaymentsLabelView: UIView!
     @IBOutlet private weak var cashPaymentsLabel: UILabel!
+    @IBOutlet private weak var payWithSpeiButton: Button!
     private let alertInfoView = AlertInfoView()
     
     private var emailTextField: TextField {
@@ -186,6 +187,9 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         }
         
         if let status = GatewayRequest.payButtonStatus {
+            if let terminalName = status.terminalName {
+                configuration.paymentData.terminalName = terminalName
+            }
             showPayButtons(status, delay: false)
             return
         }
@@ -239,8 +243,6 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                 }
             }
             
-            self.showPayButtons(response, delay: true)
-            
             if response.isOnInstallments {
                 TipTopPayApi.getInstallmentsCalculateSumByPeriod(with: configuration) { [weak self] response in
                     guard let _ = self else { return }
@@ -249,6 +251,14 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                     }
                 }
             }
+            
+            if response.isOnSpei {
+                if let terminalName = response.terminalName {
+                    configuration.paymentData.terminalName = terminalName
+                }
+            }
+            
+            self.showPayButtons(response, delay: true)
         }
     }
     
@@ -285,6 +295,11 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             payWithCash.superview?.isHidden = false
         }
         
+        if status.isOnSpei {
+            payWithSpeiButton.isHidden = false
+            payWithSpeiButton.superview?.isHidden = false
+        }
+        
         self.setupCheckbox(status.isSaveCard)
         view.layoutIfNeeded()
         view.layoutMarginsDidChange()
@@ -306,7 +321,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     
     // MARK: - Private methods
     private func setButtonsAndContainersEnabled(isEnabled: Bool, select: UIButton? = nil) {
-        let views: [UIView?] = [payWithCardButton, applePayContainer, payWithInstallmentsButton]
+        let views: [UIView?] = [payWithCardButton, applePayContainer, payWithInstallmentsButton, payWithSpeiButton]
         
         views.forEach {
             guard let view = $0, select != view else { return }
@@ -646,6 +661,30 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         presentesionView(false) {
             self.dismiss(animated: false) {
                 self.onCardOptionSelected?(isSave, true)
+            }
+        }
+    }
+    
+    @IBAction private func openSpeiForm(_ sender: UIButton) {
+        openSpeiForm()
+    }
+    
+    private func openSpeiForm() {
+        guard let controller = self.presentingViewController else { return }
+        
+        presentesionView(false) {
+            self.dismiss(animated: false) {
+                
+                TipTopPayApi.altPayCash(with: self.configuration, altPayType: .spei) { result in
+                    switch result {
+                    case .success(let response):
+                        if let response = response {
+                            PaymentSpeiViewController.present(with: response, with: self.configuration, from: controller)
+                        }
+                    case .failure(let error):
+                        PaymentProcessForm.present(with: self.configuration, cryptogram: nil, email: nil, state: .failed(error.message), from: controller)
+                    }
+                }
             }
         }
     }

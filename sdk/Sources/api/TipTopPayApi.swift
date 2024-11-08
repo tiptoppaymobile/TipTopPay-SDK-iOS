@@ -1,5 +1,6 @@
 
 import TipTopPayNetworking
+import Combine
 
 public class TipTopPayApi {
     enum Source: String {
@@ -111,6 +112,15 @@ public class TipTopPayApi {
         let email = configuration.paymentData.email
         let description = configuration.paymentData.description
         let firstName = configuration.paymentData.payer?.firstName ?? ""
+        let lastName = configuration.paymentData.payer?.lastName ?? ""
+        let middleName = configuration.paymentData.payer?.middleName ?? ""
+        let birth = configuration.paymentData.payer?.birth ?? ""
+        let address = configuration.paymentData.payer?.address ?? ""
+        let street = configuration.paymentData.payer?.street ?? ""
+        let city = configuration.paymentData.payer?.city ?? ""
+        let country = configuration.paymentData.payer?.country ?? ""
+        let postcode = configuration.paymentData.payer?.postcode ?? ""
+        let phone = configuration.paymentData.payer?.phone ?? ""
         let currency = configuration.paymentData.currency
         let accountId = configuration.paymentData.accountId
         let invoiceId = configuration.paymentData.invoiceId
@@ -124,6 +134,15 @@ public class TipTopPayApi {
         
         let payerParams = [
             "FirstName": firstName,
+            "LastName": lastName,
+            "MiddleName": middleName,
+            "Birthday": birth,
+            "Address": address,
+            "Street": street,
+            "City": city,
+            "Country": country,
+            "Postcode": postcode,
+            "Phone": phone,
             "Email": email
         ]
         
@@ -158,7 +177,85 @@ public class TipTopPayApi {
             handler(.failure(TipTopPayError(message: error.localizedDescription)))
         }
     }
+        
+    public class func getWaitStatus(configuration: TipTopPayConfiguration, 
+                                    transactionId: Int64,
+                                    publicId: String) -> AnyPublisher<TransactionStatusResponse, TipTopPayError> {
+        Future { promise in
+            let params: [String: Any?] = [
+                "TransactionId": transactionId,
+                "PublicId": publicId
+            ]
+            
+            guard let apiUrl = configuration.apiUrl else {
+                promise(.failure(.invalidURL(url: nil)))
+                return
+            }
+            
+            let request = WaitStatusRequest(params: params, apiUrl: apiUrl)
+            
+            TipTopPayURLSessionNetworkDispatcher.instance.dispatch(
+                request: request.data,
+                onSuccess: { responseData in
+                    do {
+                        let jsonDecoder = JSONDecoder()
+                        let result = try jsonDecoder.decode(TransactionStatusResponse.self, from: responseData)
+                        
+                        if result.success ?? false {
+                            promise(.success(result))
+                        } else {
+                            let errorCode = result.model?.statusCode ?? 5204
+                            let errorMessage = ApiError.getFullErrorDescription(code: String(errorCode))
+                            let error = TipTopPayError(message: errorMessage)
+                            promise(.failure(error))
+                        }
+                    } catch {
+                        promise(.failure(TipTopPayError.parseError))
+                    }
+                },
+                onError: { error in
+                    promise(.failure(TipTopPayError(message: error.localizedDescription)))
+                }
+            )
+        }
+        .eraseToAnyPublisher()
+    }
     
+    public class func stpSpeiPaymentDetails(
+        with configuration: TipTopPayConfiguration,
+        email: String,
+        transactionId: Int64,
+        completion handler: @escaping (Result<StpSpeiPaymentDetailsResponse?, TipTopPayError>) -> Void
+    ) {
+        let publicId = configuration.publicId
+        
+        guard let apiUrl = configuration.apiUrl else {
+            handler(.failure(.invalidURL(url: nil)))
+            return
+        }
+        
+        let params: [String : Any?] = [
+            "PublicId": publicId,
+            "Email": email,
+            "TransactionId": transactionId,
+        ]
+        
+        let request = StpSpeiPaymentDetailsRequest(params: params, apiUrl: apiUrl)
+        
+        request.execute { result in
+            if result.success ?? false {
+                handler(.success(result))
+            } else {
+                let reasonCode = result.success
+                let errorMessage = ApiError.getFullErrorDescription(code: String(reasonCode ?? false))
+                    let error = TipTopPayError(message: errorMessage)
+                    handler(.failure(error))
+            }
+        } onError: { error in
+            handler(.failure(TipTopPayError(message: error.localizedDescription)))
+        }
+    }
+
     public func charge(cardCryptogramPacket: String,
                        email: String?,
                        paymentData: TipTopPayData,

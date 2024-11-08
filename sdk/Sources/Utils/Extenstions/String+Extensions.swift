@@ -20,6 +20,7 @@ extension String {
     static let RUBLE_SIGN = "\u{20BD}"
     static let EURO_SIGN = "\u{20AC}"
     static let GBP_SIGN = "\u{00A3}"
+    static let spei = "Spei"
 }
 
 extension String {

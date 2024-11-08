@@ -27,9 +27,15 @@ struct AltPayCash: Codable {
 
 struct ExtensionData: Codable {
     let link: String?
+    let key, clabe: String?
+    let expiredDate: String?
+   
 
     enum CodingKeys: String, CodingKey {
         case link = "Link"
+        case key = "Key"
+        case clabe = "Clabe"
+        case expiredDate = "ExpiredDate"
     }
 }
 

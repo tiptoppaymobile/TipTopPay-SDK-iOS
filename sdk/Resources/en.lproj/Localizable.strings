@@ -29,6 +29,7 @@
 "ttpsdk_text_options_email_checkbox" = "Send payment confirmation by e-mail";
 "ttpsdk_text_options_card_be_saved" = "Your сard information will be saved for this subscription";
 "ttpsdk_text_options_email_title" = "E-mail";
+"ttpsdk_text_options_email_title_spei" = "Email";
 "ttpsdk_text_options_email_title_2" = "E-mail for the receipt";
 "ttpsdk_text_options_email_error" = "Incorrect E-mail";
 "ttpsdk_text_cash_title_barcode" = "Save the barcode! It will open in a separate tab.";
@@ -43,6 +44,20 @@
 "ttpsdk_text_options_min_cash_amount_error" = "Cash payments available for orders higher over 300.00 MXN";
 "ttpsdk_text_options_save_card_popup_1" = "Safely store your card information for future purchases, so you don’t have to enter it again.";
 "ttpsdk_text_options_save_card_popup_2" = "At the same time, we will not be able to carry out any transactions on your card without your consent.";
+"ttpsdk_text_pending_spei" = "Purchase pending SPEI payment";
+"ttpsdk_text_open_spei_bank" = "Open your online bank and make a SPEI payment";
+"ttpsdk_text_using_details" = "using the following details:";
+"ttpsdk_title_bank" = "Bank";
+"ttpsdk_title_amount" = "Amount";
+"ttpsdk_title_concept" = "Payment concept";
+"ttpsdk_title_pay_before" = "Pay before";
+"ttpsdk_title_make_spei_payment" = "Make a SPEI payment via your bank. This page can be closed. If you could not pay via SPEI, choose another payment method";
+"ttpsdk_title_other_method" = "Other method";
+"ttpsdk_title_error_sending" = "Error sending details to email";
+"ttpsdk_title_error_try_again" = "Try again";
+"ttpsdk_title_confirmation_by_email" = "Send payment details and payment confirmation by email";
+"ttpsdk_title_confirmation_sent_by_email_to" = "Payment details sent by email to:";
+"ttpsdk_title_send_to_another_email" = "Send to another email";
 "ttpsdk_text_card_title" = "Pay by card";
 "ttpsdk_text_card_hint_number" = "Card number";
 "ttpsdk_text_card_hint_number_incorrect" = "Incorrect card number";
@@ -129,3 +144,4 @@
 "ttpsdk_error_" = "Couldn't get a response";
 "ttpsdk_error_1" = "The operation cannot be processed";
 "ttpsdk_error_2" = "Contact your bank or use another card";
+

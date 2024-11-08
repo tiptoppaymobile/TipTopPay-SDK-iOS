@@ -62,8 +62,20 @@ extension UIImage {
         return self.named("icn_seven_eleven")
     }
     
+    public class var ic_spei: UIImage {
+        return self.named("icn_spei")
+    }
+    
     public class var ic_wallmart: UIImage {
         return self.named("icn_wallmart")
+    }
+    
+    public class var ic_copy_spei_image: UIImage {
+        return self.named("icn_copy_spei")
+    }
+    
+    public class var ic_send_btn_logo: UIImage {
+        return self.named("icn_send_btn_logo")
     }
 }
 

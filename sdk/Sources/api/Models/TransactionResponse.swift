@@ -6,9 +6,8 @@
 //  Copyright © 2021 TipTopPay. All rights reserved.
 //
 
-
 public struct TransactionResponse: Codable {
     public private(set) var success: Bool?
     public private(set) var message: String?
-    public private(set) var model: Transaction?    
+    public private(set) var model: Transaction?
 }

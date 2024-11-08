@@ -52,11 +52,18 @@ public class TipTopPayURLSessionNetworkDispatcher: NSObject, TipTopPayNetworkDis
         headers["Content-Type"] = "application/json"
         headers["User-Agent"] = "iOS SDK 1.5.0"
         urlRequest.allHTTPHeaderFields = headers
-        
+                
         session.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
                 onError(error)
                 return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200 {
+                    onError(TipTopPayError(message: "\(httpResponse.statusCode)"))
+                    return
+                }
             }
             
             guard let data = data else {

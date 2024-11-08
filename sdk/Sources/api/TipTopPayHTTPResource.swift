@@ -14,6 +14,8 @@ enum TipTopPayHTTPResource: String {
     case post3ds = "payments/ThreeDSCallback"
     case installmentsCalculateSumByPeriod = "installments/calculate/sum-by-period"
     case altPayCash = "payments/altpay/pay"
+    case stpSpeiPaymentDetails = "stp/spei/payment-details"
+    case waitStatus = "payments/qr/status/wait"
     case binInfo = "bins/info"
     
     func asUrl(apiUrl: String) -> String {

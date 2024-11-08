@@ -113,7 +113,7 @@ class DemoViewController: BaseViewController {
             .setJsonData(jsonData)
 
         let configuration = TipTopPayConfiguration(
-            region: .MX,
+            region: .KZ,
             publicId: publicId,
             paymentData: paymentData,
             delegate: self,

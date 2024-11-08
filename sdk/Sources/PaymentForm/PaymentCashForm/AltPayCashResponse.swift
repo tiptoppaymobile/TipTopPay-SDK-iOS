@@ -20,3 +20,15 @@ public struct AltPayCashResponse: Codable {
         case errorCode = "ErrorCode"
     }
 }
+
+public struct StpSpeiPaymentDetailsResponse: Codable {
+    let success: Bool?
+    let message, errorCode: String?
+
+    enum CodingKeys: String, CodingKey {
+        case success = "Success"
+        case message = "Message"
+        case errorCode = "ErrorCode"
+    }
+}
+

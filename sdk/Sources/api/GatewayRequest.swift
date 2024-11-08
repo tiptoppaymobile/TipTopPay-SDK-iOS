@@ -11,22 +11,28 @@ struct PayButtonStatus {
     var isSaveCard: Int?
     var isOnInstallments: Bool
     var isOnCash: Bool
+    var isOnSpei: Bool
     var isCvvRequired: Bool?
     var cashMethods: [Int]? = []
     var minAmount: Int?
+    var terminalName: String?
     
     init(isSaveCard: Int? = nil,
          isOnInstallments: Bool = false,
          isOnCash: Bool = false,
+         isOnSpei: Bool = false,
          isCvvRequired: Bool? = nil,
          cashMethods: [Int]? = [],
-         minAmount: Int? = nil) {
+         minAmount: Int? = nil,
+         terminalName: String? = nil) {
         self.isSaveCard = isSaveCard
         self.isOnInstallments = isOnInstallments
         self.isCvvRequired = isCvvRequired
         self.isOnCash = isOnCash
+        self.isOnSpei = isOnSpei
         self.cashMethods = cashMethods
         self.minAmount = minAmount
+        self.terminalName = terminalName
     }
 }
 
@@ -65,6 +71,7 @@ extension GatewayRequest {
             result.isSaveCard = value.model.features?.isSaveCard
             result.isCvvRequired = value.model.isCvvRequired
             result.cashMethods = value.model.externalPaymentMethods.flatMap { $0.cashMethods ?? [] }
+            result.terminalName = value.model.terminalName
             if let minAmountValue = value.model.externalPaymentMethods.compactMap({ $0.minAmount }).first {
                 result.minAmount = minAmountValue
             }
@@ -77,6 +84,8 @@ extension GatewayRequest {
                     result.isOnInstallments = element.enabled
                 case .cash:
                     result.isOnCash = element.enabled
+                case .spei:
+                    result.isOnSpei = element.enabled
                 }
             }
 
@@ -89,9 +98,4 @@ extension GatewayRequest {
             completion(nil, error)
         }
     }
-}
-
-enum CaseOfBank: Int {
-    case installments = 16
-    case cash = 14
 }

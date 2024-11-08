@@ -65,6 +65,10 @@ extension UIColor {
         return color(named: "color_progress_text")
     }
     
+    public class var colorSpeiField: UIColor {
+        return color(named: "color_spei_field")
+    }
+    
     private class func color(named colorName: String) -> UIColor! {
         return UIColor.init(named: colorName, in: Bundle.mainSdk, compatibleWith: .none)
     }
