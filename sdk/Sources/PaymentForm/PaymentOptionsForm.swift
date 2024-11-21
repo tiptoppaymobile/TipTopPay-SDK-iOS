@@ -81,6 +81,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     
     // MARK: - Lifecycle app
     override func viewDidLoad() {
+        print("ViewDidLoad")
         super.viewDidLoad()
         isReceiptButtonEnabled(configuration.requireEmail)
         alertInfoView.isHidden = true
@@ -186,13 +187,13 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             return
         }
         
-        if let status = GatewayRequest.payButtonStatus {
-            if let terminalName = status.terminalName {
-                configuration.paymentData.terminalName = terminalName
-            }
-            showPayButtons(status, delay: false)
-            return
-        }
+//        if let status = GatewayRequest.payButtonStatus {
+//            if let terminalName = status.terminalName {
+//                configuration.paymentData.terminalName = terminalName
+//            }
+//            showPayButtons(status, delay: false)
+//            return
+//        }
         
         loaderView.startAnimated("ttp_update_loader".localized)
         
@@ -244,11 +245,19 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             }
             
             if response.isOnInstallments {
-                TipTopPayApi.getInstallmentsCalculateSumByPeriod(with: configuration) { [weak self] response in
+                TipTopPayApi.getInstallmentsCalculateSumByPeriod(with: configuration) { [weak self] responseInstallment in
                     guard let _ = self else { return }
-                    if let installmentsConfiguration = response?.model?.configuration {
+                    
+                    print("InstallmentsR")
+                    
+                    if let isInstallmentsAvailable = responseInstallment?.model?.isCardInstallmentAvailable {
+                        configuration.paymentData.isInstallmentAvailable = isInstallmentsAvailable
+                        print("InstallmentsR: " + isInstallmentsAvailable.description)
+                    }
+                    if let installmentsConfiguration = responseInstallment?.model?.configuration {
                         configuration.paymentData.installmentConfigurations = installmentsConfiguration
                     }
+                    self?.showPayButtons(response, delay: true)
                 }
             }
             
@@ -257,6 +266,8 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                     configuration.paymentData.terminalName = terminalName
                 }
             }
+            
+            print("InstallmentsF")
             
             self.showPayButtons(response, delay: true)
         }
@@ -286,8 +297,12 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     private func showPayButtons(_  status: PayButtonStatus, delay: Bool = true) {
         
         if status.isOnInstallments {
-            payWithInstallmentsButton.isHidden = false
-            mainInstallmentsView.isHidden = false
+            print("Installments")
+            print("Installments: " + configuration.paymentData.isInstallmentAvailable.description)
+            if configuration.paymentData.isInstallmentAvailable {
+                payWithInstallmentsButton.isHidden = false
+                mainInstallmentsView.isHidden = false
+            }
         }
         
         if status.isOnCash {

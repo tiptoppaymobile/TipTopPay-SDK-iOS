@@ -55,10 +55,10 @@ enum PaymentViewModelType: Codable {
     //text
     var `default`: String {
         switch self {
-        case .api: return "https://api.tiptoppay.kz/"
+        case .api: return ""
         case .publicId: return "test_api_00000000000000000000002"
         case .amount: return "100"
-        case .currency: return "KZT"
+        case .currency: return "MXN"
         case .invoiceId: return "AD12345"
         case .description: return "A basket of limes"
         case .accountId: return "AD123"

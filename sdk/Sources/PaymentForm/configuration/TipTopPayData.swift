@@ -72,6 +72,7 @@ public class TipTopPayData {
     var cryptogram: String?
     var isCvvRequired: Bool?
     var installmentConfigurations: [Configuration] = []
+    var isInstallmentAvailable: Bool = false
     var isInstallmentsMode: Bool = false
     var cashMethods: [Int]? = []
     
