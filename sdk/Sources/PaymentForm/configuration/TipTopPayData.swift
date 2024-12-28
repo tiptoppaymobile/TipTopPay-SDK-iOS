@@ -63,7 +63,9 @@ public class TipTopPayData {
     private (set) var accountId: String?
     private (set) var invoiceId: String?
     private (set) var cultureName: String?
-    private (set) var jsonData: String?
+    private (set) var receipt: Receipt?
+    private (set) var recurrent: Recurrent?
+    private var jsonData: String?
 
     var terminalName: String?
     var amount: String
@@ -129,6 +131,68 @@ public class TipTopPayData {
     public func setEmail(_ email: String?) -> TipTopPayData {
         self.email = email
         return self
+    }
+    
+    public func setRecurrent(_ recurrent: Recurrent?) -> TipTopPayData {
+        self.recurrent = recurrent
+        return self
+    }
+    
+    public func setReceipt(_ receipt: Receipt?) -> TipTopPayData {
+        self.receipt = receipt
+        return self
+    }
+    
+    public func getJsonData() -> String? {
+        
+        var baseData: [String: Any] = [:]
+        
+        if let existingJsonData = self.jsonData,
+           let parsedData = convertStringToDictionary(text: existingJsonData) {
+            baseData = parsedData
+        }
+        
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .useDefaultKeys
+        
+        var tiptoppay: [String: Any] = baseData["PaymentData"] as? [String: Any] ?? [:]
+        
+        if let recurrent = recurrent {
+            if let recurrentData = try? encoder.encode(recurrent),
+               let recurrentJson = try? JSONSerialization.jsonObject(with: recurrentData, options: []) as? [String: Any] {
+                tiptoppay["recurrent"] = recurrentJson
+            } else {
+                print("Failed to encode or convert Recurrent to JSON")
+            }
+        }
+        
+        if let receipt = receipt {
+            if let receiptData = try? encoder.encode(receipt),
+               let receiptJson = try? JSONSerialization.jsonObject(with: receiptData, options: []) as? [String: Any] {
+                tiptoppay["CustomerReceipt"] = receiptJson
+            } else {
+                print("Failed to encode or convert Receipt to JSON")
+            }
+        }
+        
+        if !tiptoppay.isEmpty {
+            baseData["PaymentData"] = tiptoppay
+        }
+        
+        guard JSONSerialization.isValidJSONObject(baseData) else {
+            print("Invalid JSON structure: \(baseData)")
+            return nil
+        }
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: baseData, options: [])
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            self.jsonData = jsonString
+            return jsonString
+        } catch {
+            print("Failed to serialize JSON: \(error.localizedDescription)")
+            return nil
+        }
     }
     
     public func setJsonData(_ jsonData: String) -> TipTopPayData {

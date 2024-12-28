@@ -323,7 +323,17 @@ struct TipTopPay: Codable {
     let recurrent: Recurrent?
 }
 
-struct Recurrent: Codable {
-    let interval, period: String?
-    let amount: Int?
+public struct Recurrent: Codable {
+    public let amount: Int
+    public let interval: String
+    public let period: Int
+    public let customerReceipt: Receipt?
+    
+    public init(interval: String, period: Int, customerReceipt: Receipt, amount: Int) {
+        self.interval = interval
+        self.period = period
+        self.customerReceipt = customerReceipt
+        self.amount = amount
+    }
 }
+

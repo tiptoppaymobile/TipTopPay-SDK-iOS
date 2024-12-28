@@ -54,6 +54,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     private var applePaymentSucceeded: Bool?
     private var resultTransaction: Transaction?
     private var errorMessage: String?
+    private var isReturningFromChildScreen: Bool = false
     
     private lazy var currentContainerHeight: CGFloat = containerView.bounds.height
     private var heightPresentView: CGFloat { return containerView.bounds.height }
@@ -102,6 +103,15 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         
         payWithCardButton.addTarget(self, action: #selector(onCard(_:)), for: .touchUpInside)
         configurePayWithCashButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if isReturningFromChildScreen {
+            isReturningFromChildScreen = false
+            return
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -187,13 +197,13 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
             return
         }
         
-//        if let status = GatewayRequest.payButtonStatus {
-//            if let terminalName = status.terminalName {
-//                configuration.paymentData.terminalName = terminalName
-//            }
-//            showPayButtons(status, delay: false)
-//            return
-//        }
+        if let status = GatewayRequest.payButtonStatus {
+            if let terminalName = status.terminalName {
+                configuration.paymentData.terminalName = terminalName
+            }
+            showPayButtons(status, delay: false)
+            return
+        }
         
         loaderView.startAnimated("ttp_update_loader".localized)
         
@@ -248,11 +258,8 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                 TipTopPayApi.getInstallmentsCalculateSumByPeriod(with: configuration) { [weak self] responseInstallment in
                     guard let _ = self else { return }
                     
-                    print("InstallmentsR")
-                    
                     if let isInstallmentsAvailable = responseInstallment?.model?.isCardInstallmentAvailable {
                         configuration.paymentData.isInstallmentAvailable = isInstallmentsAvailable
-                        print("InstallmentsR: " + isInstallmentsAvailable.description)
                     }
                     if let installmentsConfiguration = responseInstallment?.model?.configuration {
                         configuration.paymentData.installmentConfigurations = installmentsConfiguration
@@ -266,8 +273,6 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
                     configuration.paymentData.terminalName = terminalName
                 }
             }
-            
-            print("InstallmentsF")
             
             self.showPayButtons(response, delay: true)
         }
@@ -549,7 +554,7 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         
         // recurrent
         var isOnRecurrent: Bool {
-            guard let jsonData = configuration.paymentData.jsonData,
+            guard let jsonData = configuration.paymentData.getJsonData(),
                   let data = jsonData.data(using: .utf8),
                   let value = try? JSONDecoder().decode(TipTopPayModel.self, from: data),
                   let _ = value.tiptoppay?.recurrent

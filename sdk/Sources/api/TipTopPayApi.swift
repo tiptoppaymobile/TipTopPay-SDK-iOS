@@ -125,7 +125,7 @@ public class TipTopPayApi {
         let accountId = configuration.paymentData.accountId
         let invoiceId = configuration.paymentData.invoiceId
         let sсheme: Scheme = configuration.isUseDualMessagePayment ? .auth : .charge
-        let jsonData = configuration.paymentData.jsonData
+        let jsonData = configuration.paymentData.getJsonData()
         
         guard let apiUrl = configuration.apiUrl else {
             handler(.failure(.invalidURL(url: nil)))
@@ -356,9 +356,12 @@ public class TipTopPayApi {
             "Description" : paymentData.description ?? "", // Описание оплаты в свободной форме (Необязательный)
             "AccountId" : paymentData.accountId ?? "", // Идентификатор пользователя в вашей системе (Необязательный)
             "Payer" : paymentData.payer?.dictionary as Any, // Доп. поле, куда передается информация о плательщике. (Необязательный)
-            "JsonData" : paymentData.jsonData ?? "", // Любые другие данные, которые будут связаны с транзакцией, в том числе инструкции для создания подписки или формирования онлайн-чека (Необязательный)
             "scenario" : 7
         ]
+        
+        if let jsonData = paymentData.getJsonData() {
+            parameters["JsonData"] = jsonData // Любые другие данные, которые будут связаны с транзакцией, в том числе инструкции для создания подписки или формирования онлайн-чека (Необязательный)
+        }
         
         if let term = term {
             parameters["Term"] = term
