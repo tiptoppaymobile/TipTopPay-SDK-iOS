@@ -6,7 +6,10 @@ TipTopPay SDK allows to integrate payment processing service into an iOS applica
 iOS v. 13.0 and younger
 
 ### Connection
-We recommend using CocoaPods. Add dependencies into Podfile:
+To connect the SDK, you can use Swift Package Manager or CocoaPods.
+
+* To connect via Swift Package Manager, use the menu File -> Add Package Dependencies, find the SDK using the Package URL - https://github.com/tiptoppaymobile/TipTopPay-SDK-iOS and add the dependency to the project.
+* To connect via CocoaPods, add dependencies to the Podfile:
 
 ```
 pod 'TipTopPay', :git =>  "https://github.com/tiptoppaymobile/TipTopPay-SDK-iOS", :branch => "master"
@@ -113,6 +116,15 @@ extension CartViewController: CardIOPaymentViewControllerDelegate {
 ```
 
 ### Update history:
+
+#### 1.0.11
+* Swift Package Manager added
+
+#### 1.0.10
+* Fix bugs
+
+#### 1.0.9
+* Stability improved
 
 #### 1.0.8
 * Spei payment method

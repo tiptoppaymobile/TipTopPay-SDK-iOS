@@ -1,5 +1,5 @@
 PODS:
-  - TipTopPay (1.0.6):
+  - TipTopPay (1.0.10):
     - TipTopPayNetworking
   - TipTopPayNetworking (1.0.0)
 
@@ -14,7 +14,7 @@ EXTERNAL SOURCES:
     :path: "../networking"
 
 SPEC CHECKSUMS:
-  TipTopPay: 7fad78b93ff71af18d5aba0a80412fe5952d1b63
+  TipTopPay: 80d1d89ad912ff9c80d1d367713fd723c77a7ac8
   TipTopPayNetworking: 4cf1691550bf741920e8e81e32e194ea3dd9f6d2
 
 PODFILE CHECKSUM: 738fced3e7ee055a37ec6d14dff1109e6d14732d

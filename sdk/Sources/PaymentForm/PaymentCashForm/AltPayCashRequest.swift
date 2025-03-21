@@ -7,6 +7,7 @@
 //
 
 import TipTopPayNetworking
+import Foundation
 
 final class AltPayCashRequest: BaseRequest, TipTopPayRequestType {
     typealias ResponseType = AltPayCashResponse

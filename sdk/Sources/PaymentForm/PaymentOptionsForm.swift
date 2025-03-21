@@ -344,7 +344,9 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
         let views: [UIView?] = [payWithCardButton, applePayContainer, payWithInstallmentsButton, payWithSpeiButton]
         
         views.forEach {
-            guard let view = $0, select != view else { return }
+            guard let view = $0, select != view else {
+                return
+            }
             view.isUserInteractionEnabled = isEnabled
             view.alpha = isEnabled ? 1.0 : 0.3
         }
@@ -843,6 +845,7 @@ extension PaymentOptionsForm: UITextFieldDelegate {
     
     private func updateButtonStatesBasedOnForm() {
         let emailIsValid = isValid(email: configuration.paymentData.email)
+
         guard let minAmount = GatewayRequest.payButtonStatus?.minAmount else {
             setButtonsAndContainersEnabled(isEnabled: false)
             return
@@ -864,22 +867,36 @@ extension PaymentOptionsForm: UITextFieldDelegate {
             payWithCash.isUserInteractionEnabled = shouldEnableOtherButtons
             payWithCash.alpha = shouldEnableOtherButtons ? 1.0 : 0.3
             cashPaymentsLabelView.isHidden = true
+            cashPaymentsLabel.isHidden = true
+        }
+        
+        if configuration.region == .KZ {
+            cashPaymentsLabelView.isHidden = true
+            cashPaymentsLabel.isHidden = true
         }
         
         updateEmailVisualState(emailIsValid: emailIsValid)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if let text = textField.text,
-           let textRange = Range(range, in: text) {
-            let updatedText = text.replacingCharacters(in: textRange, with: string)
-            
-            configuration.paymentData.email = updatedText
-            
-            let emailIsValid = isValid(email: updatedText)
-            updateEmailVisualState(emailIsValid: emailIsValid)
-            updateButtonStatesBasedOnForm()
+
+        guard let text = textField.text,
+              let textRange = Range(range, in: text) else {
+            return true
         }
+
+        let updatedText = text.replacingCharacters(in: textRange, with: string)
+
+        configuration.paymentData.email = updatedText
+        let emailIsValid = isValid(email: updatedText)
+        updateEmailVisualState(emailIsValid: emailIsValid)
+        
+        if configuration.region == .KZ {
+            cashPaymentsLabelView.isHidden = true
+        }
+        
+        updateButtonStatesBasedOnForm()
+
         return true
     }
     
@@ -903,7 +920,11 @@ extension PaymentOptionsForm: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         let emailIsValid = isValid(email: configuration.paymentData.email)
         updateEmailVisualState(emailIsValid: emailIsValid)
-        updateButtonStatesBasedOnForm()
+        
+        if configuration.region != .KZ {
+            updateButtonStatesBasedOnForm()
+        }
+      
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

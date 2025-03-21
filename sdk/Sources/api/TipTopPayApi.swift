@@ -1,6 +1,7 @@
 
 import TipTopPayNetworking
 import Combine
+import Foundation
 
 public class TipTopPayApi {
     enum Source: String {

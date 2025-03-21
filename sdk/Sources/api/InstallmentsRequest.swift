@@ -7,6 +7,7 @@
 //
 
 import TipTopPayNetworking
+import Foundation
 
 final class InstallmentsRequest: BaseRequest, TipTopPayRequestType {
     typealias ResponseType = InstallmentConfigurationResponse

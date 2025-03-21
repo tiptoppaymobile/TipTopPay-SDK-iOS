@@ -6,6 +6,7 @@
 //
 
 import TipTopPayNetworking
+import Foundation
 
 struct PayButtonStatus {
     var isSaveCard: Int?

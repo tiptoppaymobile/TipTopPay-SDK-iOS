@@ -5,6 +5,8 @@
 //  Created by TipTopPay on 01.07.2021.
 //
 
+import Foundation
+
 public protocol TipTopPayNetworkDispatcher {
     func dispatch(request: TipTopPayRequest,
                   onSuccess: @escaping (Data) -> Void,

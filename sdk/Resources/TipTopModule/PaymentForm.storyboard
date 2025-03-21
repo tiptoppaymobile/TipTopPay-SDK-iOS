@@ -14,7 +14,7 @@
         <!--Payment Card Form-->
         <scene sceneID="Ekd-cN-VVV">
             <objects>
-                <viewController storyboardIdentifier="PaymentForm" modalPresentationStyle="overCurrentContext" id="yYc-tm-1ad" customClass="PaymentCardForm" customModule="TipTopPaySDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentForm" modalPresentationStyle="overCurrentContext" id="yYc-tm-1ad" customClass="PaymentCardForm" customModule="TipTopPay" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bBd-gv-a5O">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -56,7 +56,7 @@
                                                     <constraint firstItem="ySl-co-gaI" firstAttribute="top" secondItem="ano-D3-Ubo" secondAttribute="bottom" constant="23" id="nRU-WX-Auc"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h4y-G1-6qY" customClass="View" customModule="TipTopPaySDK" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h4y-G1-6qY" customClass="View" customModule="TipTopPay">
                                                 <rect key="frame" x="0.0" y="108" width="353" height="56"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер карты" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KA9-vx-nN5">
@@ -65,7 +65,7 @@
                                                         <color key="textColor" name="color_text_button"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="jQn-IO-Zsi" customClass="TextField" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="jQn-IO-Zsi" customClass="TextField" customModule="TipTopPay">
                                                         <rect key="frame" x="16" y="26" width="243" height="22"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="evG-77-Oeh"/>
@@ -133,10 +133,10 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="tfx-fU-6Mk">
                                                 <rect key="frame" x="0.0" y="180" width="353" height="56"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8z6-s9-M8m" userLabel="Expdate view" customClass="View" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8z6-s9-M8m" userLabel="Expdate view" customClass="View" customModule="TipTopPay">
                                                         <rect key="frame" x="0.0" y="0.0" width="168.66666666666666" height="56"/>
                                                         <subviews>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="u1g-7O-WBg" customClass="TextField" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="u1g-7O-WBg" customClass="TextField" customModule="TipTopPay">
                                                                 <rect key="frame" x="16" y="26" width="136.66666666666666" height="22"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="22" id="8SA-qY-tbm"/>
@@ -190,10 +190,10 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17Q-q2-SrP" userLabel="Cvv view" customClass="View" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17Q-q2-SrP" userLabel="Cvv view" customClass="View" customModule="TipTopPay">
                                                         <rect key="frame" x="184.66666666666663" y="0.0" width="168.33333333333337" height="56"/>
                                                         <subviews>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="H7z-3W-BC2" customClass="TextField" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="H7z-3W-BC2" customClass="TextField" customModule="TipTopPay">
                                                                 <rect key="frame" x="14.999999999999993" y="26" width="98.333333333333314" height="22"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="22" id="FB0-rR-L78"/>
@@ -413,7 +413,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ej6-Eu-2fF" userLabel="Button View">
                                                 <rect key="frame" x="0.0" y="268" width="353" height="72"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJC-RS-URc" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJC-RS-URc" customClass="Button" customModule="TipTopPay">
                                                         <rect key="frame" x="0.0" y="16" width="353" height="56"/>
                                                         <color key="backgroundColor" name="color_blue"/>
                                                         <constraints>
@@ -533,7 +533,7 @@
         <!--Payment Process Form-->
         <scene sceneID="Z90-g9-bOz">
             <objects>
-                <viewController storyboardIdentifier="PaymentProcessForm" id="xmx-Pt-dkp" customClass="PaymentProcessForm" customModule="TipTopPaySDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentProcessForm" id="xmx-Pt-dkp" customClass="PaymentProcessForm" customModule="TipTopPay" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Gpt-uD-nOq">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -602,7 +602,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qWv-ZM-rPY" userLabel="Button VIew">
                                                 <rect key="frame" x="0.0" y="368.66666666666663" width="313" height="76"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bvh-hz-knE" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bvh-hz-knE" customClass="Button" customModule="TipTopPay">
                                                         <rect key="frame" x="20" y="20" width="273" height="56"/>
                                                         <color key="backgroundColor" name="color_blue"/>
                                                         <constraints>
@@ -628,7 +628,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uCs-AP-siD">
                                                 <rect key="frame" x="0.0" y="444.66666666666663" width="313" height="68"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gHW-ix-nkJ" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gHW-ix-nkJ" customClass="Button" customModule="TipTopPay">
                                                         <rect key="frame" x="20" y="12" width="273" height="56"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="56" id="eEs-5l-dzs"/>
@@ -705,7 +705,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HQI-Lk-0gA">
                                                 <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HWd-EI-zm7" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HWd-EI-zm7" customClass="Button" customModule="TipTopPay">
                                                         <rect key="frame" x="345" y="0.0" width="48" height="44"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="48" id="e3k-Nw-MEf"/>
@@ -787,7 +787,7 @@
         <!--Payment Options Form-->
         <scene sceneID="b2v-mo-euJ">
             <objects>
-                <viewController storyboardIdentifier="PaymentOptionsForm" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" modalTransitionStyle="crossDissolve" modalPresentationStyle="fullScreen" id="1Yz-Du-ae4" customClass="PaymentOptionsForm" customModule="TipTopPaySDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentOptionsForm" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" modalTransitionStyle="crossDissolve" modalPresentationStyle="fullScreen" id="1Yz-Du-ae4" customClass="PaymentOptionsForm" customModule="TipTopPay" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="W9V-aT-4CT">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -802,7 +802,7 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HGh-3C-ngX">
                                 <rect key="frame" x="0.0" y="842" width="393" height="266"/>
                                 <subviews>
-                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yDU-pE-2eL" userLabel="TopElementView" customClass="View" customModule="TipTopPaySDK" customModuleProvider="target">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yDU-pE-2eL" userLabel="TopElementView" customClass="View" customModule="TipTopPay">
                                         <rect key="frame" x="129" y="21" width="135" height="5"/>
                                         <color key="backgroundColor" name="color_black"/>
                                         <constraints>
@@ -846,7 +846,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dn4-zG-GBf" userLabel="Main card view">
                                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                 <subviews>
-                                                                    <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ds8-4r-6Pa" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                                    <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ds8-4r-6Pa" customClass="Button" customModule="TipTopPay">
                                                                         <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                         <color key="backgroundColor" name="color_blue"/>
                                                                         <constraints>
@@ -877,10 +877,10 @@
                                                                     <constraint firstAttribute="bottom" secondItem="Ds8-4r-6Pa" secondAttribute="bottom" id="nUa-yS-ScG"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Ri-Gg-9fp" userLabel="Main installments view" customClass="View" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Ri-Gg-9fp" userLabel="Main installments view" customClass="View" customModule="TipTopPay">
                                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                 <subviews>
-                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6oP-Bd-BQn" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6oP-Bd-BQn" customClass="Button" customModule="TipTopPay">
                                                                         <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                         <color key="backgroundColor" red="0.090196078431372548" green="0.34509803921568627" blue="0.5725490196078431" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <constraints>
@@ -918,7 +918,7 @@
                                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GVD-Tj-WMm">
                                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                 <subviews>
-                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzY-nT-7Sa" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzY-nT-7Sa" customClass="Button" customModule="TipTopPay">
                                                                         <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="56" id="9JI-fg-fIx"/>
@@ -974,7 +974,7 @@
                                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ko-PA-OUY">
                                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                 <subviews>
-                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="21g-qT-hr6" customClass="Button" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="21g-qT-hr6" customClass="Button" customModule="TipTopPay">
                                                                         <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
                                                                         <color key="backgroundColor" red="0.91764705882352937" green="0.94509803921568625" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <constraints>
@@ -1021,7 +1021,7 @@
                                                             </view>
                                                         </subviews>
                                                     </stackView>
-                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wyU-2h-F6Y" userLabel="Main view receipt button" customClass="FooterForPresentCard" customModule="TipTopPaySDK" customModuleProvider="target">
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wyU-2h-F6Y" userLabel="Main view receipt button" customClass="FooterForPresentCard" customModule="TipTopPay">
                                                         <rect key="frame" x="0.0" y="76" width="361" height="50"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>

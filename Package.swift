@@ -4,31 +4,41 @@
 import PackageDescription
 
 let package = Package(
-    name: "TipTopPay",
+    name: "TipTopPaySDK",
+    defaultLocalization: "en",
+    platforms: [
+        .iOS(.v13)
+    ],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "TipTopPaySDK",
-            targets: ["sdk"]),
+            name: "TipTopPay",
+            targets: ["TipTopPay"]
+        ),
         .library(
             name: "TipTopPayNetworking",
-            targets: ["networking"]),
-    ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+            targets: ["TipTopPayNetworking"]
+        )
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "sdk",
+            name: "TipTopPay",
+            dependencies: [
+                "TipTopPayNetworking"
+            ],
             path: "sdk",
+            exclude: [
+                "Pods",
+                "sdk-Bridging-Header.h"
+            ],
             resources: [
-                            .process("../Resources")
-                        ]),
+                .process("Resources")
+            ]
+        ),
         .target(
-            name: "networking",
-            path: "networking"),
-    ]
+            name: "TipTopPayNetworking",
+            path: "networking",
+            sources: ["source"]
+        ),
+    ],
+    swiftLanguageVersions: [.v5]
 )

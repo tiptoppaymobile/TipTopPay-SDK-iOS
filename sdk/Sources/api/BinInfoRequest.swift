@@ -7,6 +7,7 @@
 //
 
 import TipTopPayNetworking
+import Foundation
 
 final class BinInfoRequest: BaseRequest, TipTopPayRequestType {
     typealias ResponseType = BankInfoResponse

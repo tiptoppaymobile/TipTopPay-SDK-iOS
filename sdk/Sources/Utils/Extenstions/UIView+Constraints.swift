@@ -23,9 +23,17 @@ extension UIView {
     }
     
     func addXib(_ name: String? = nil) {
-        guard let bundle = Bundle(identifier: "org.cocoapods.TipTopPaySDK") else { return }
-        let string = name ?? String(describing: Self.self)
-        let views = bundle.loadNibNamed(string, owner: self)
+        #if SWIFT_PACKAGE
+        let nibBundle = Bundle.module
+        #else
+        guard let nibBundle = Bundle(identifier: "org.cocoapods.TipTopPaySDK") else {
+            return
+        }
+        #endif
+        
+        let xibName = name ?? String(describing: Self.self)
+        
+        let views = nibBundle.loadNibNamed(xibName, owner: self)
         if let view = views?.first as? UIView  {
             view.frame = bounds
             addSubview(view)
