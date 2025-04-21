@@ -334,7 +334,9 @@ final class PaymentOptionsForm: PaymentForm, PKPaymentAuthorizationViewControlle
     }
     
     @IBAction func dismissModalButtonTapped(_ sender: UIButton) {
+        configuration.paymentUIDelegate.paymentFormWillHide()
         presentesionView(false) {
+            self.configuration.paymentUIDelegate.paymentFormDidHide()
             self.dismiss(animated: false)
         }
     }
@@ -993,7 +995,10 @@ private extension PaymentOptionsForm {
         case .ended, .cancelled:
             
             if -newHeight > defaultHeight {
+                configuration.paymentUIDelegate.paymentFormWillHide()
+                
                 presentesionView(false) {
+                    self.configuration.paymentUIDelegate.paymentFormDidHide()
                     self.dismiss(animated: false)
                 }
             } else {

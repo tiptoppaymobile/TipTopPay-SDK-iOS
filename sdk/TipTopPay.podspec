@@ -9,7 +9,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "TipTopPay"
-  spec.version      = "1.0.11"
+  spec.version      = "1.0.12"
   spec.summary      = "Core library that allows you to use internet acquiring from TipTopPay in your app"
   spec.description  = "Core library that allows you to use internet acquiring from TipTopPay in your app!"
 

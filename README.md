@@ -117,6 +117,9 @@ extension CartViewController: CardIOPaymentViewControllerDelegate {
 
 ### Update history:
 
+#### 1.0.12
+* Fixed delegates paymentFormWillHide and paymentFormDidHide
+
 #### 1.0.11
 * Swift Package Manager added
 
